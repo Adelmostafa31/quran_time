@@ -33,7 +33,7 @@ class QuranTime extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               debugShowMaterialGrid: false,
-              initialRoute: CachHelper.getData(key: 'first_time')
+              initialRoute: CachHelper.getData(key: 'first_time') == null
                   ? Routes.intial
                   : Routes.home,
               theme: theme(),

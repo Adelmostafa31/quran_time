@@ -47,5 +47,26 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<!-- 🔔 NOTIFICATION PERMISSIONS FOR QURAN REMINDERS -->
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>background-processing</string>
+		</array>
+		<!-- Notification permission description -->
+		<key>NSUserNotificationsUsageDescription</key>
+		<string>Quran Timer needs permission to send you daily Quran reading reminders to help maintain your spiritual routine.</string>
+		<!-- Background task identifiers -->
+		<key>BGTaskSchedulerPermittedIdentifiers</key>
+		<array>
+			<string>com.quran.reminder</string>
+		</array>
+		<!-- 📱 ARABIC TEXT SUPPORT -->
+		<key>CFBundleAllowMixedLocalizations</key>
+		<true/>
+		<key>CFBundleLocalizations</key>
+		<array>
+			<string>en</string>
+			<string>ar</string>
+		</array>
 	</dict>
 </plist>

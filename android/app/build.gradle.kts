@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.quran"
+    namespace = "com.example.quran_time"
     compileSdk = flutter.compileSdkVersion
 
     // Explicitly set the NDK version to match plugin requirements
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.quran"
+        applicationId = "com.example.quran_time"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
