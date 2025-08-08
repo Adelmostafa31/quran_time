@@ -1,3 +1,6 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:quran_time/core/helper/cach_helper.dart';
+
 class BackgroundNotificationService {
   static final BackgroundNotificationService _instance =
       BackgroundNotificationService._internal();
@@ -54,11 +57,10 @@ class BackgroundNotificationService {
 
   Future<void> checkAndNotifyProgress() async {
     await initBackgroundNotifications();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    int totalSurahsRead = prefs.getInt('total_surahs_read') ?? 0;
-    int totalAyahsRead = prefs.getInt('total_ayahs_read') ?? 0;
-    String userName = prefs.getString('user_name') ?? 'مستخدم';
+    // int totalSurahsRead = CachHelper.getData(key: 'total_surahs_read') ?? 0;
+    int totalAyahsRead = CachHelper.getData(key: 'total_ayahs_read') ?? 0;
+    String userName = CachHelper.getData(key: 'user_name') ?? 'مستخدم';
 
     // Check if user completed a quarter of Quran (approximately 1515 ayahs)
     List<int> quarterMilestones = [
@@ -70,7 +72,7 @@ class BackgroundNotificationService {
 
     for (int i = 0; i < quarterMilestones.length; i++) {
       String progressKey = 'quarter_${i + 1}_notified';
-      bool alreadyNotified = prefs.getBool(progressKey) ?? false;
+      bool alreadyNotified = CachHelper.getData(key: progressKey) ?? false;
 
       if (totalAyahsRead >= quarterMilestones[i] && !alreadyNotified) {
         await _notifications.show(
@@ -93,7 +95,7 @@ class BackgroundNotificationService {
             ),
           ),
         );
-        await prefs.setBool(progressKey, true);
+        await CachHelper.saveData(key: progressKey, value: true);
         break;
       }
     }

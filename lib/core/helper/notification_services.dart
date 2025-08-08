@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:workmanager/workmanager.dart';
+
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
@@ -46,22 +51,22 @@ class NotificationService {
     Duration period;
     switch (frequency) {
       case 'daily':
-        period = Duration(days: 1);
+        period = const Duration(days: 1);
         break;
       case 'weekly':
-        period = Duration(days: 7);
+        period = const Duration(days: 7);
         break;
       case 'monthly':
-        period = Duration(days: 30);
+        period = const Duration(days: 30);
         break;
       default:
-        period = Duration(days: 1);
+        period = const Duration(days: 1);
     }
 
     // Register periodic task for reminders
     await Workmanager().registerPeriodicTask(
-      "quran-reminder",
-      "quranReminderTask",
+      'quran-reminder',
+      'quranReminderTask',
       frequency: period,
       inputData: {
         'userName': userName,
@@ -80,9 +85,9 @@ class NotificationService {
 
     // Register periodic task for progress notifications
     await Workmanager().registerPeriodicTask(
-      "progress-check",
-      "progressNotificationTask",
-      frequency: Duration(hours: 6), // Check every 6 hours
+      'progress-check',
+      'progressNotificationTask',
+      frequency: const Duration(hours: 6), // Check every 6 hours
       inputData: {'userName': userName},
       constraints: Constraints(
         networkType: NetworkType.notRequired,

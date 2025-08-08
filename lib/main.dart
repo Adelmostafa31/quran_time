@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quran_time/core/helper/background_notification_services.dart';
+import 'package:quran_time/core/helper/bloc_observer.dart';
+import 'package:quran_time/core/helper/cach_helper.dart';
+import 'package:quran_time/core/routing/app_router.dart';
+import 'package:quran_time/quran_time.dart';
+import 'package:workmanager/workmanager.dart';
 
 // Background task callback
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
-      case "quranReminderTask":
+      case 'quranReminderTask':
         await BackgroundNotificationService().sendReminderNotification(
           inputData?['userName'] ?? 'مستخدم',
           inputData?['duration'] ?? 5,
         );
         break;
-      case "progressNotificationTask":
+      case 'progressNotificationTask':
         await BackgroundNotificationService().checkAndNotifyProgress();
         break;
     }
@@ -19,17 +28,15 @@ void callbackDispatcher() {
   });
 }
 
-void main() {
-  runApp(const MainApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
+  );
+  await CachHelper.init();
+  Bloc.observer = MyBlocObserver();
+  await ScreenUtil.ensureScreenSize();
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
-    );
-  }
+  runApp(QuranTime(appRouter: AppRouter()));
 }
