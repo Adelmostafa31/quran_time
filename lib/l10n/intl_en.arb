@@ -11,5 +11,10 @@
   "reminderTime": "Reminder Time:",
   "remindMeAt": "Remind me at",
   "startMyJourney": "Start My Journey",
-  "changeLanguage": "Change Language"
+  "changeLanguage": "Change Language",
+  "times": "Times",
+  "startReading": "Start Reading",
+  "readyForYour": "Ready for your ",
+  "nextMinutes": "next minutes?",
+  "nextReminder": "Next reminder"
 }

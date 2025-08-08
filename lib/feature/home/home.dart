@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quran_time/core/helper/cach_helper.dart';
+import 'package:quran_time/core/helper/extentions.dart';
+import 'package:quran_time/core/theming/colors.dart';
+import 'package:quran_time/core/theming/styles.dart';
 import 'package:quran_time/feature/reading/reading.dart';
 import 'package:quran_time/feature/settings/settings.dart';
+import 'package:quran_time/generated/l10n.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -41,12 +46,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('مرحباً $userName'),
-        backgroundColor: const Color(0xFF1B5E20),
-        foregroundColor: Colors.white,
+        title: Text('مرحباً $userName', style: TextStyles.font16WhiteBold),
+        backgroundColor: ColorsManager.mainColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings, color: ColorsManager.white),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const SettingsScreen()),
@@ -55,14 +59,14 @@ class _HomeState extends State<Home> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         child: Column(
           children: [
             Row(
               children: [
                 Expanded(
                   child: _buildStatCard(
-                    'Sessions',
+                    S.of(context).times,
                     '$sessionsCompleted',
                     Icons.check_circle,
                   ),
@@ -77,38 +81,48 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            Card(
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    const Icon(Icons.book, size: 50, color: Color(0xFF1B5E20)),
-                    const SizedBox(height: 15),
+            20.height,
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+              decoration: BoxDecoration(
+                color: ColorsManager.white,
+                borderRadius: BorderRadius.circular(16.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.book,
+                    size: 50,
+                    color: ColorsManager.mainColor,
+                  ),
+                  15.height,
+                  Text(
+                    '${S.of(context).readyForYour}$duration ${S.of(context).nextMinutes}',
+                    style: TextStyles.font16MainColorBold,
+                    textAlign: TextAlign.center,
+                  ),
+                  5.height,
+                  if (reminderTime != null)
                     Text(
-                      'Ready for your $duration-minute session?',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      '${S.of(context).nextReminder}: ${reminderTime!.format(context)}',
+                      style: TextStyles.font12GreyBold,
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 5),
-                    if (reminderTime != null)
-                      Text(
-                        'Next reminder: ${reminderTime!.format(context)}',
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                        textAlign: TextAlign.center,
-                      ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'اللهم اجعل القرآن ربيع قلبي',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+                  10.height,
+                  Text(
+                    'اللهم اجعل القرآن ربيع قلبي',
+                    style: TextStyles.font12Grey,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
             const Spacer(),
@@ -120,14 +134,14 @@ class _HomeState extends State<Home> {
                 ),
               ).then((_) => _loadUserData()),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1B5E20),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                backgroundColor: ColorsManager.mainColor,
+                foregroundColor: ColorsManager.white,
+                padding: EdgeInsets.symmetric(vertical: 15.h),
                 minimumSize: const Size(double.infinity, 0),
               ),
-              child: const Text(
-                'Start Reading',
-                style: TextStyle(fontSize: 20),
+              child: Text(
+                S.of(context).startReading,
+                style: TextStyles.font16WhiteBold,
               ),
             ),
           ],
@@ -137,21 +151,36 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildStatCard(String title, String value, IconData icon) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            Icon(icon, color: const Color(0xFF1B5E20)),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return Container(
+      height: 70.h,
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      decoration: BoxDecoration(
+        color: ColorsManager.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: ColorsManager.mainColor, size: 25.sp),
+          10.width,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyles.font14MainColorBold),
+                5.height,
+                Text(value, style: TextStyles.font16MainColorBold),
+              ],
             ),
-            Text(title, style: TextStyle(color: Colors.grey[600])),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

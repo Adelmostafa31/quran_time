@@ -182,6 +182,12 @@ class TextStyles {
     fontSize: 14.sp,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle font12GreyBold = TextStyle(
+    fontFamily: 'Cairo',
+    color: ColorsManager.grey,
+    fontSize: 12.sp,
+    fontWeight: FontWeight.bold,
+  );
   static TextStyle font18Grey = TextStyle(
     fontFamily: 'Cairo',
     color: ColorsManager.grey,

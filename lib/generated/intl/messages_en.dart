@@ -26,6 +26,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "daily": MessageLookupByLibrary.simpleMessage("Dialy"),
     "minutes": MessageLookupByLibrary.simpleMessage("min"),
     "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
+    "nextMinutes": MessageLookupByLibrary.simpleMessage("next minutes?"),
+    "nextReminder": MessageLookupByLibrary.simpleMessage("Next reminder"),
     "onboardingTitle": MessageLookupByLibrary.simpleMessage(
       "Let\'s set up your Quran reading routine",
     ),
@@ -33,15 +35,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "readingFrequency": MessageLookupByLibrary.simpleMessage(
       "Reading Frequency:",
     ),
+    "readyForYour": MessageLookupByLibrary.simpleMessage("Ready for your "),
     "remindMeAt": MessageLookupByLibrary.simpleMessage("Remind me at"),
     "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time:"),
     "sessionDuration": MessageLookupByLibrary.simpleMessage(
       "Session Duration:",
     ),
     "startMyJourney": MessageLookupByLibrary.simpleMessage("Start My Journey"),
+    "startReading": MessageLookupByLibrary.simpleMessage("Start Reading"),
     "thisFieldIsRequired": MessageLookupByLibrary.simpleMessage(
       "This field is required",
     ),
+    "times": MessageLookupByLibrary.simpleMessage("Times"),
     "weekly": MessageLookupByLibrary.simpleMessage("Weekly"),
   };
 }

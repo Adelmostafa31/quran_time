@@ -11,5 +11,10 @@
   "reminderTime": "وقت التذكير:",
   "remindMeAt": "ذكرني في",
   "startMyJourney": "ابدأ رحلتي",
-  "changeLanguage": "تغيير اللغة"
+  "changeLanguage": "تغيير اللغة",
+  "times": "مرات",
+  "startReading": "ابدأ قراءة",
+  "readyForYour": "مستعد لقراءة",
+  "nextMinutes": "الدقائق القادم؟",
+  "nextReminder": "التذكير القادم"
 }

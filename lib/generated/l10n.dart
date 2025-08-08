@@ -158,6 +158,51 @@ class S {
       args: [],
     );
   }
+
+  /// `Times`
+  String get times {
+    return Intl.message('Times', name: 'times', desc: '', args: []);
+  }
+
+  /// `Start Reading`
+  String get startReading {
+    return Intl.message(
+      'Start Reading',
+      name: 'startReading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ready for your `
+  String get readyForYour {
+    return Intl.message(
+      'Ready for your ',
+      name: 'readyForYour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `next minutes?`
+  String get nextMinutes {
+    return Intl.message(
+      'next minutes?',
+      name: 'nextMinutes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next reminder`
+  String get nextReminder {
+    return Intl.message(
+      'Next reminder',
+      name: 'nextReminder',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -26,18 +26,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "daily": MessageLookupByLibrary.simpleMessage("يوميا"),
     "minutes": MessageLookupByLibrary.simpleMessage("دقيقة"),
     "monthly": MessageLookupByLibrary.simpleMessage("شهريا"),
+    "nextMinutes": MessageLookupByLibrary.simpleMessage("الدقائق القادم؟"),
+    "nextReminder": MessageLookupByLibrary.simpleMessage("التذكير القادم"),
     "onboardingTitle": MessageLookupByLibrary.simpleMessage(
       "ضع إعدادات قراءة القرآن الكريم",
     ),
     "putYourName": MessageLookupByLibrary.simpleMessage("ادخل اسمك"),
     "readingFrequency": MessageLookupByLibrary.simpleMessage("تكرار القراءة:"),
+    "readyForYour": MessageLookupByLibrary.simpleMessage("مستعد لقراءة"),
     "remindMeAt": MessageLookupByLibrary.simpleMessage("ذكرني في"),
     "reminderTime": MessageLookupByLibrary.simpleMessage("وقت التذكير:"),
     "sessionDuration": MessageLookupByLibrary.simpleMessage("مدة القراءة:"),
     "startMyJourney": MessageLookupByLibrary.simpleMessage("ابدأ رحلتي"),
+    "startReading": MessageLookupByLibrary.simpleMessage("ابدأ قراءة"),
     "thisFieldIsRequired": MessageLookupByLibrary.simpleMessage(
       "هذا الحقل مطلوب",
     ),
+    "times": MessageLookupByLibrary.simpleMessage("مرات"),
     "weekly": MessageLookupByLibrary.simpleMessage("اسبوعيا"),
   };
 }
