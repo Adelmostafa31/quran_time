@@ -16,5 +16,8 @@
   "startReading": "Start Reading",
   "readyForYour": "Ready for your ",
   "nextMinutes": "next minutes?",
-  "nextReminder": "Next reminder"
+  "nextReminder": "Next reminder",
+  "setting": "Settings",
+  "saveSettings": "Save Settings",
+  "settingsSaved": "Settings saved! Notifications updated."
 }

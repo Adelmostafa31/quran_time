@@ -16,5 +16,8 @@
   "startReading": "ابدأ قراءة",
   "readyForYour": "مستعد لقراءة",
   "nextMinutes": "الدقائق القادم؟",
-  "nextReminder": "التذكير القادم"
+  "nextReminder": "التذكير القادم",
+  "setting": "الاعدادات",
+  "saveSettings": "حفظ الاعدادات",
+  "settingsSaved": "تم حفظ الاعدادات! تحديث التنبيهات."
 }

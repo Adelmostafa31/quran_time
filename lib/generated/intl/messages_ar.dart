@@ -36,7 +36,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "readyForYour": MessageLookupByLibrary.simpleMessage("مستعد لقراءة"),
     "remindMeAt": MessageLookupByLibrary.simpleMessage("ذكرني في"),
     "reminderTime": MessageLookupByLibrary.simpleMessage("وقت التذكير:"),
+    "saveSettings": MessageLookupByLibrary.simpleMessage("حفظ الاعدادات"),
     "sessionDuration": MessageLookupByLibrary.simpleMessage("مدة القراءة:"),
+    "setting": MessageLookupByLibrary.simpleMessage("الاعدادات"),
+    "settingsSaved": MessageLookupByLibrary.simpleMessage(
+      "تم حفظ الاعدادات! تحديث التنبيهات.",
+    ),
     "startMyJourney": MessageLookupByLibrary.simpleMessage("ابدأ رحلتي"),
     "startReading": MessageLookupByLibrary.simpleMessage("ابدأ قراءة"),
     "thisFieldIsRequired": MessageLookupByLibrary.simpleMessage(

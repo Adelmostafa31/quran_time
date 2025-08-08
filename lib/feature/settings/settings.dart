@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quran_time/core/helper/cach_helper.dart';
+import 'package:quran_time/core/helper/extentions.dart';
 import 'package:quran_time/core/helper/notification_services.dart';
+import 'package:quran_time/core/theming/colors.dart';
+import 'package:quran_time/core/theming/styles.dart';
+import 'package:quran_time/generated/l10n.dart';
+import 'package:quran_time/global_manager/ui_cubit.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -48,8 +55,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       reminderTime: reminderTime,
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Settings saved! Notifications updated.')),
+    toast(
+      context: context,
+      message: S.of(context).settingsSaved,
+      backgroundColor: ColorsManager.green,
     );
   }
 
@@ -57,52 +66,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: const Color(0xFF1B5E20),
-        foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: ColorsManager.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(S.of(context).setting, style: TextStyles.font16WhiteBold),
+        backgroundColor: ColorsManager.mainColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Reading Frequency:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              S.of(context).readingFrequency,
+              style: TextStyles.font14MainColorBold,
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                Expanded(child: _buildFrequencyButton('daily', 'Daily')),
+                Expanded(
+                  child: _buildFrequencyButton('daily', S.of(context).daily),
+                ),
                 const SizedBox(width: 10),
-                Expanded(child: _buildFrequencyButton('weekly', 'Weekly')),
+                Expanded(
+                  child: _buildFrequencyButton('weekly', S.of(context).weekly),
+                ),
                 const SizedBox(width: 10),
-                Expanded(child: _buildFrequencyButton('monthly', 'Monthly')),
+                Expanded(
+                  child: _buildFrequencyButton(
+                    'monthly',
+                    S.of(context).monthly,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 30),
-            const Text(
-              'Session Duration:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              S.of(context).sessionDuration,
+              style: TextStyles.font14MainColorBold,
             ),
             const SizedBox(height: 10),
             Row(
+              spacing: 3.w,
               children: [
                 Expanded(child: _buildDurationButton(3)),
-                const SizedBox(width: 10),
+
                 Expanded(child: _buildDurationButton(5)),
-                const SizedBox(width: 10),
+
                 Expanded(child: _buildDurationButton(10)),
-                const SizedBox(width: 10),
+
                 Expanded(child: _buildDurationButton(15)),
               ],
             ),
             const SizedBox(height: 30),
-            const Text(
-              'Reminder Time:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              S.of(context).reminderTime,
+              style: TextStyles.font14MainColorBold,
             ),
             const SizedBox(height: 10),
+
             InkWell(
               onTap: () async {
                 TimeOfDay? picked = await showTimePicker(
@@ -116,32 +139,61 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Container(
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(5),
+                  color: ColorsManager.grey.withOpacity(0.1),
+                  border: Border.all(
+                    color: ColorsManager.grey.withOpacity(0.3),
+                  ),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.access_time),
-                    const SizedBox(width: 10),
+                    const Icon(
+                      Icons.access_time,
+                      color: ColorsManager.mainColor,
+                    ),
+                    10.width,
                     Text(
-                      'Remind me at ${reminderTime.format(context)}',
-                      style: const TextStyle(fontSize: 16),
+                      '${S.of(context).remindMeAt} ${reminderTime.format(context)}',
+                      style: TextStyles.font14MainColorBold,
                     ),
                     const Spacer(),
-                    const Icon(Icons.arrow_drop_down),
+                    const Icon(
+                      Icons.arrow_drop_down_rounded,
+                      color: ColorsManager.mainColor,
+                    ),
                   ],
                 ),
               ),
+            ),
+            10.height,
+            Row(
+              children: [
+                Text(
+                  S.of(context).changeLanguage,
+                  style: TextStyles.font16MainColorBold,
+                ),
+                const Spacer(),
+                Switch(
+                  value: context.read<UiCubit>().switchedButton,
+                  onChanged: (value) {
+                    context.read<UiCubit>().changeLange(switched: value);
+                    context.read<UiCubit>().switchedButton = value;
+                  },
+                ),
+              ],
             ),
             const Spacer(),
             ElevatedButton(
               onPressed: _saveSettings,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1B5E20),
-                foregroundColor: Colors.white,
+                backgroundColor: ColorsManager.mainColor,
+                foregroundColor: ColorsManager.white,
                 minimumSize: const Size(double.infinity, 50),
               ),
-              child: const Text('Save Settings'),
+              child: Text(
+                S.of(context).saveSettings,
+                style: TextStyles.font16WhiteBold,
+              ),
             ),
           ],
         ),
@@ -155,11 +207,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       onPressed: () => setState(() => frequency = value),
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected
-            ? const Color(0xFF1B5E20)
-            : Colors.grey[300],
+            ? ColorsManager.mainColor
+            : ColorsManager.white,
         foregroundColor: isSelected ? Colors.white : Colors.black,
       ),
-      child: Text(label),
+      child: Text(
+        label,
+        style: isSelected
+            ? TextStyles.font12WhiteBold
+            : TextStyles.font12MainColorBold,
+      ),
     );
   }
 
@@ -169,11 +226,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       onPressed: () => setState(() => duration = minutes),
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected
-            ? const Color(0xFF1B5E20)
-            : Colors.grey[300],
+            ? ColorsManager.mainColor
+            : ColorsManager.white,
         foregroundColor: isSelected ? Colors.white : Colors.black,
       ),
-      child: Text('${minutes}min'),
+      child: Text(
+        '$minutes ${S.of(context).minutes}',
+        textAlign: TextAlign.center,
+        style: isSelected
+            ? TextStyles.font12WhiteBold
+            : TextStyles.font12MainColorBold,
+      ),
     );
   }
 }

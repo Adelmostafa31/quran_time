@@ -38,8 +38,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "readyForYour": MessageLookupByLibrary.simpleMessage("Ready for your "),
     "remindMeAt": MessageLookupByLibrary.simpleMessage("Remind me at"),
     "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time:"),
+    "saveSettings": MessageLookupByLibrary.simpleMessage("Save Settings"),
     "sessionDuration": MessageLookupByLibrary.simpleMessage(
       "Session Duration:",
+    ),
+    "setting": MessageLookupByLibrary.simpleMessage("Settings"),
+    "settingsSaved": MessageLookupByLibrary.simpleMessage(
+      "Settings saved! Notifications updated.",
     ),
     "startMyJourney": MessageLookupByLibrary.simpleMessage("Start My Journey"),
     "startReading": MessageLookupByLibrary.simpleMessage("Start Reading"),

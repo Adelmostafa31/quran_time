@@ -203,6 +203,31 @@ class S {
       args: [],
     );
   }
+
+  /// `Settings`
+  String get setting {
+    return Intl.message('Settings', name: 'setting', desc: '', args: []);
+  }
+
+  /// `Save Settings`
+  String get saveSettings {
+    return Intl.message(
+      'Save Settings',
+      name: 'saveSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings saved! Notifications updated.`
+  String get settingsSaved {
+    return Intl.message(
+      'Settings saved! Notifications updated.',
+      name: 'settingsSaved',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
