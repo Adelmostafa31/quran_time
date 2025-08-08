@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quran_time/core/helper/cach_helper.dart';
+import 'package:quran_time/core/helper/constant.dart';
 import 'package:quran_time/core/helper/extentions.dart';
 import 'package:quran_time/core/helper/notification_services.dart';
 import 'package:quran_time/core/routing/routes.dart';
+import 'package:quran_time/core/theming/colors.dart';
+import 'package:quran_time/core/theming/styles.dart';
+import 'package:quran_time/feature/onboarding/custom_form_field.dart';
+import 'package:quran_time/generated/l10n.dart';
+import 'package:quran_time/global_manager/ui_cubit.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -16,116 +24,156 @@ class _OnboardingState extends State<Onboarding> {
   String selectedFrequency = 'daily';
   int selectedDuration = 5;
   TimeOfDay reminderTime = const TimeOfDay(hour: 20, minute: 0);
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('مرحباً - Welcome'),
-        backgroundColor: const Color(0xFF1B5E20),
-        foregroundColor: Colors.white,
+        title: Text('مرحباً - Welcome', style: TextStyles.font16WhiteBold),
+        backgroundColor: ColorsManager.mainColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Let\'s set up your Quran reading routine',
-              style: Theme.of(context).textTheme.displayLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 30),
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Your name (اسمك)',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.person),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Reading Frequency:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(child: _buildFrequencyButton('daily', 'Daily')),
-                const SizedBox(width: 10),
-                Expanded(child: _buildFrequencyButton('weekly', 'Weekly')),
-                const SizedBox(width: 10),
-                Expanded(child: _buildFrequencyButton('monthly', 'Monthly')),
-              ],
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Session Duration:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(child: _buildDurationButton(3)),
-                const SizedBox(width: 10),
-                Expanded(child: _buildDurationButton(5)),
-                const SizedBox(width: 10),
-                Expanded(child: _buildDurationButton(10)),
-                const SizedBox(width: 10),
-                Expanded(child: _buildDurationButton(15)),
-              ],
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Reminder Time:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            InkWell(
-              onTap: () async {
-                TimeOfDay? picked = await showTimePicker(
-                  context: context,
-                  initialTime: reminderTime,
-                );
-                if (picked != null) {
-                  setState(() => reminderTime = picked);
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(5),
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              CustomFormField(
+                controller: nameController,
+                prefixIcon: const Icon(
+                  Icons.person_2,
+                  color: ColorsManager.mainColor,
                 ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.access_time),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Remind me at ${reminderTime.format(context)}',
-                      style: const TextStyle(fontSize: 16),
+                hint: S.of(context).putYourName,
+                validator: Constant.normalValidator(context: context),
+              ),
+              20.height,
+              Text(
+                S.of(context).readingFrequency,
+                style: TextStyles.font14MainColorBold,
+              ),
+              10.height,
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildFrequencyButton('daily', S.of(context).daily),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _buildFrequencyButton(
+                      'weekly',
+                      S.of(context).weekly,
                     ),
-                    const Spacer(),
-                    const Icon(Icons.arrow_drop_down),
-                  ],
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _buildFrequencyButton(
+                      'monthly',
+                      S.of(context).monthly,
+                    ),
+                  ),
+                ],
+              ),
+              20.height,
+              Text(
+                S.of(context).sessionDuration,
+                style: TextStyles.font14MainColorBold,
+              ),
+              10.height,
+              Row(
+                children: [
+                  Expanded(child: _buildDurationButton(3)),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildDurationButton(5)),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildDurationButton(10)),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildDurationButton(15)),
+                ],
+              ),
+              20.height,
+              Text(
+                S.of(context).reminderTime,
+                style: TextStyles.font14MainColorBold,
+              ),
+              const SizedBox(height: 10),
+              InkWell(
+                onTap: () async {
+                  TimeOfDay? picked = await showTimePicker(
+                    context: context,
+                    initialTime: reminderTime,
+                  );
+                  if (picked != null) {
+                    setState(() => reminderTime = picked);
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: ColorsManager.grey.withOpacity(0.1),
+                    border: Border.all(
+                      color: ColorsManager.grey.withOpacity(0.3),
+                    ),
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        color: ColorsManager.mainColor,
+                      ),
+                      10.width,
+                      Text(
+                        '${S.of(context).remindMeAt} ${reminderTime.format(context)}',
+                        style: TextStyles.font14MainColorBold,
+                      ),
+                      const Spacer(),
+                      const Icon(
+                        Icons.arrow_drop_down_rounded,
+                        color: ColorsManager.mainColor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: _savePreferences,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1B5E20),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 15),
+              10.height,
+              Row(
+                children: [
+                  Text(
+                    S.of(context).changeLanguage,
+                    style: TextStyles.font16MainColorBold,
+                  ),
+                  const Spacer(),
+                  Switch(
+                    value: context.read<UiCubit>().switchedButton,
+                    onChanged: (value) {
+                      context.read<UiCubit>().changeLange(switched: value);
+                      context.read<UiCubit>().switchedButton = value;
+                    },
+                  ),
+                ],
               ),
-              child: const Text(
-                'Start My Journey',
-                style: TextStyle(fontSize: 18),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    _savePreferences();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorsManager.mainColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                ),
+                child: Text(
+                  S.of(context).startMyJourney,
+                  style: TextStyles.font16WhiteBold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -137,11 +185,16 @@ class _OnboardingState extends State<Onboarding> {
       onPressed: () => setState(() => selectedFrequency = value),
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected
-            ? const Color(0xFF1B5E20)
-            : Colors.grey[300],
+            ? ColorsManager.mainColor
+            : ColorsManager.white,
         foregroundColor: isSelected ? Colors.white : Colors.black,
       ),
-      child: Text(label),
+      child: Text(
+        label,
+        style: isSelected
+            ? TextStyles.font12WhiteBold
+            : TextStyles.font12MainColorBold,
+      ),
     );
   }
 
@@ -151,22 +204,20 @@ class _OnboardingState extends State<Onboarding> {
       onPressed: () => setState(() => selectedDuration = minutes),
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected
-            ? const Color(0xFF1B5E20)
-            : Colors.grey[300],
+            ? ColorsManager.mainColor
+            : ColorsManager.white,
         foregroundColor: isSelected ? Colors.white : Colors.black,
       ),
-      child: Text('${minutes}min'),
+      child: Text(
+        '$minutes ${S.of(context).minutes}',
+        style: isSelected
+            ? TextStyles.font12WhiteBold
+            : TextStyles.font12MainColorBold,
+      ),
     );
   }
 
   Future<void> _savePreferences() async {
-    if (nameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter your name')));
-      return;
-    }
-
     await CachHelper.saveData(
       key: 'user_name',
       value: nameController.text.trim(),

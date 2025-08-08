@@ -44,11 +44,11 @@ ThemeData theme() => ThemeData(
     surfaceTintColor: ColorsManager.white,
   ),
   timePickerTheme: TimePickerThemeData(
-    dayPeriodColor: ColorsManager.mainColor,
+    dayPeriodColor: ColorsManager.white,
     dayPeriodBorderSide: const BorderSide(color: ColorsManager.mainColor),
-    dayPeriodTextStyle: TextStyles.font14MainColorBold,
+    dayPeriodTextStyle: TextStyles.font14WhiteBold,
     backgroundColor: ColorsManager.mainColor,
-    hourMinuteColor: ColorsManager.mainColor,
+    hourMinuteColor: ColorsManager.white,
     hourMinuteTextColor: ColorsManager.mainColor,
     cancelButtonStyle: ButtonStyle(
       alignment: Alignment.center,
@@ -58,31 +58,30 @@ ThemeData theme() => ThemeData(
     ),
     confirmButtonStyle: ButtonStyle(
       alignment: Alignment.center,
-      textStyle: WidgetStateProperty.all<TextStyle>(
-        TextStyles.font14MainColorBold,
-      ),
+      textStyle: WidgetStateProperty.all<TextStyle>(TextStyles.font14WhiteBold),
       fixedSize: WidgetStateProperty.all<Size>(Size(80.w, 20.h)),
-      foregroundColor: WidgetStateProperty.all<Color>(ColorsManager.mainColor),
+      foregroundColor: WidgetStateProperty.all<Color>(ColorsManager.white),
     ),
     timeSelectorSeparatorColor: WidgetStateProperty.all<Color>(
-      ColorsManager.mainColor,
+      ColorsManager.white,
     ),
-    entryModeIconColor: ColorsManager.mainColor,
+    entryModeIconColor: ColorsManager.white,
     dayPeriodTextColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
       if (states.contains(WidgetState.selected)) {
         return ColorsManager.mainColor;
       } else {
-        return ColorsManager.mainColor;
+        return ColorsManager.white;
       }
     }),
     dialBackgroundColor: ColorsManager.mainColor,
-    dialHandColor: ColorsManager.mainColor,
-    dialTextStyle: TextStyles.font14MainColorBold,
-    helpTextStyle: TextStyles.font14MainColorBold,
+    dialHandColor: ColorsManager.white,
+    dialTextStyle: TextStyles.font14WhiteBold,
+    helpTextStyle: TextStyles.font14WhiteBold,
     inputDecorationTheme: const InputDecorationTheme(
       filled: true,
-      fillColor: ColorsManager.mainColor,
-      border: InputBorder.none,
+      fillColor: ColorsManager.white,
+      counterStyle: TextStyle(color: ColorsManager.white),
+      outlineBorder: BorderSide(color: ColorsManager.yellow, width: 2),
     ),
   ),
   datePickerTheme: DatePickerThemeData(

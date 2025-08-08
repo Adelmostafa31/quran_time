@@ -1,1 +1,15 @@
-{}
+{
+  "onboardingTitle": "Let's set up your Quran reading routine",
+  "thisFieldIsRequired": "This field is required",
+  "putYourName": "Put your name",
+  "minutes": "min",
+  "readingFrequency": "Reading Frequency:",
+  "daily": "Dialy",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "sessionDuration": "Session Duration:",
+  "reminderTime": "Reminder Time:",
+  "remindMeAt": "Remind me at",
+  "startMyJourney": "Start My Journey",
+  "changeLanguage": "Change Language"
+}

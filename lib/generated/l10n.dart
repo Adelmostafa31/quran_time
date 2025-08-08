@@ -53,13 +53,121 @@ class S {
   static S? maybeOf(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
+
+  /// `Let's set up your Quran reading routine`
+  String get onboardingTitle {
+    return Intl.message(
+      'Let\'s set up your Quran reading routine',
+      name: 'onboardingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This field is required`
+  String get thisFieldIsRequired {
+    return Intl.message(
+      'This field is required',
+      name: 'thisFieldIsRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Put your name`
+  String get putYourName {
+    return Intl.message(
+      'Put your name',
+      name: 'putYourName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `min`
+  String get minutes {
+    return Intl.message('min', name: 'minutes', desc: '', args: []);
+  }
+
+  /// `Reading Frequency:`
+  String get readingFrequency {
+    return Intl.message(
+      'Reading Frequency:',
+      name: 'readingFrequency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dialy`
+  String get daily {
+    return Intl.message('Dialy', name: 'daily', desc: '', args: []);
+  }
+
+  /// `Weekly`
+  String get weekly {
+    return Intl.message('Weekly', name: 'weekly', desc: '', args: []);
+  }
+
+  /// `Monthly`
+  String get monthly {
+    return Intl.message('Monthly', name: 'monthly', desc: '', args: []);
+  }
+
+  /// `Session Duration:`
+  String get sessionDuration {
+    return Intl.message(
+      'Session Duration:',
+      name: 'sessionDuration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reminder Time:`
+  String get reminderTime {
+    return Intl.message(
+      'Reminder Time:',
+      name: 'reminderTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remind me at`
+  String get remindMeAt {
+    return Intl.message('Remind me at', name: 'remindMeAt', desc: '', args: []);
+  }
+
+  /// `Start My Journey`
+  String get startMyJourney {
+    return Intl.message(
+      'Start My Journey',
+      name: 'startMyJourney',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Language`
+  String get changeLanguage {
+    return Intl.message(
+      'Change Language',
+      name: 'changeLanguage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   const AppLocalizationDelegate();
 
   List<Locale> get supportedLocales {
-    return const <Locale>[Locale.fromSubtags(languageCode: 'en')];
+    return const <Locale>[
+      Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ar'),
+    ];
   }
 
   @override

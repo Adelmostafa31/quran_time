@@ -1,0 +1,15 @@
+{
+  "onboardingTitle": "ضع إعدادات قراءة القرآن الكريم",
+  "thisFieldIsRequired": "هذا الحقل مطلوب",
+  "putYourName": "ادخل اسمك",
+  "minutes": "دقيقة",
+  "readingFrequency": "تكرار القراءة:",
+  "daily": "يوميا",
+  "weekly": "اسبوعيا",
+  "monthly": "شهريا",
+  "sessionDuration": "مدة القراءة:",
+  "reminderTime": "وقت التذكير:",
+  "remindMeAt": "ذكرني في",
+  "startMyJourney": "ابدأ رحلتي",
+  "changeLanguage": "تغيير اللغة"
+}

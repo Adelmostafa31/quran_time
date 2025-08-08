@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a en locale. All the
+// This is a library that provides messages for a ar locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -18,30 +18,26 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'en';
+  String get localeName => 'ar';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "changeLanguage": MessageLookupByLibrary.simpleMessage("Change Language"),
-    "daily": MessageLookupByLibrary.simpleMessage("Dialy"),
-    "minutes": MessageLookupByLibrary.simpleMessage("min"),
-    "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
+    "changeLanguage": MessageLookupByLibrary.simpleMessage("تغيير اللغة"),
+    "daily": MessageLookupByLibrary.simpleMessage("يوميا"),
+    "minutes": MessageLookupByLibrary.simpleMessage("دقيقة"),
+    "monthly": MessageLookupByLibrary.simpleMessage("شهريا"),
     "onboardingTitle": MessageLookupByLibrary.simpleMessage(
-      "Let\'s set up your Quran reading routine",
+      "ضع إعدادات قراءة القرآن الكريم",
     ),
-    "putYourName": MessageLookupByLibrary.simpleMessage("Put your name"),
-    "readingFrequency": MessageLookupByLibrary.simpleMessage(
-      "Reading Frequency:",
-    ),
-    "remindMeAt": MessageLookupByLibrary.simpleMessage("Remind me at"),
-    "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time:"),
-    "sessionDuration": MessageLookupByLibrary.simpleMessage(
-      "Session Duration:",
-    ),
-    "startMyJourney": MessageLookupByLibrary.simpleMessage("Start My Journey"),
+    "putYourName": MessageLookupByLibrary.simpleMessage("ادخل اسمك"),
+    "readingFrequency": MessageLookupByLibrary.simpleMessage("تكرار القراءة:"),
+    "remindMeAt": MessageLookupByLibrary.simpleMessage("ذكرني في"),
+    "reminderTime": MessageLookupByLibrary.simpleMessage("وقت التذكير:"),
+    "sessionDuration": MessageLookupByLibrary.simpleMessage("مدة القراءة:"),
+    "startMyJourney": MessageLookupByLibrary.simpleMessage("ابدأ رحلتي"),
     "thisFieldIsRequired": MessageLookupByLibrary.simpleMessage(
-      "This field is required",
+      "هذا الحقل مطلوب",
     ),
-    "weekly": MessageLookupByLibrary.simpleMessage("Weekly"),
+    "weekly": MessageLookupByLibrary.simpleMessage("اسبوعيا"),
   };
 }
