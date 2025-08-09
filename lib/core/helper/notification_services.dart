@@ -106,13 +106,10 @@ class NotificationService {
     required TimeOfDay reminderTime,
   }) async {
     await _notifications.cancelAll();
-
     List<String> motivationalMessages = [
-      'Ready for your $duration minutes with the Quran, $userName? 📖',
-      'Time for Quran reading, $userName! اللهم بارك 🤲',
-      'Your daily Quran session awaits, $userName 🌟',
-      'Let\'s read together, $userName. القرآن نور القلب 💚',
-      '$userName, your spiritual moment is here 🕌',
+      'جاهز لقراءة القرأن لمدة $duration دقايق يا $userName! 📖',
+      'وقت قراءة الوِرد اليومي, $userName! اللهم بارك 🤲',
+      'تذكير بالوِرد اليومي يا, $userName 🌟',
     ];
 
     if (frequency == 'daily') {
