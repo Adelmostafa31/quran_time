@@ -48,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       value: reminderTime.minute,
     );
 
-    await NotificationService().scheduleReminders(
+    await NotificationService().scheduleAdvancedReminders(
       userName: userName,
       frequency: frequency,
       duration: duration,

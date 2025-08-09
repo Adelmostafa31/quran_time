@@ -33,10 +33,14 @@ class _ReadingState extends State<Reading> {
   int versesPerPage = 10; // عدد الآيات في كل صفحة
   late int totalPages;
 
+  // إضافة ScrollController
+  late ScrollController scrollController;
+
   @override
   void initState() {
     super.initState();
     remainingSeconds = widget.duration * 60;
+    scrollController = ScrollController(); // تهيئة الـ controller
     _loadSelectedSurah();
     _calculatePages();
   }
@@ -125,19 +129,36 @@ class _ReadingState extends State<Reading> {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
+  // تعديل دالة الصفحة التالية مع إضافة الاسكرول
   void _nextPage() {
     if (currentPage < totalPages) {
       setState(() {
         currentPage++;
       });
+      // التمرير إلى أعلى الصفحة
+      _scrollToTop();
     }
   }
 
+  // تعديل دالة الصفحة السابقة مع إضافة الاسكرول
   void _previousPage() {
     if (currentPage > 1) {
       setState(() {
         currentPage--;
       });
+      // التمرير إلى أعلى الصفحة
+      _scrollToTop();
+    }
+  }
+
+  // دالة للتمرير إلى أعلى الصفحة
+  void _scrollToTop() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
@@ -187,6 +208,7 @@ class _ReadingState extends State<Reading> {
   @override
   void dispose() {
     timer?.cancel();
+    scrollController.dispose(); // تنظيف الـ controller
     super.dispose();
   }
 
@@ -333,6 +355,8 @@ class _ReadingState extends State<Reading> {
                       _calculatePages();
                     });
                     _saveSelectedSurah(newValue);
+                    // التمرير إلى أعلى عند تغيير السورة
+                    _scrollToTop();
                   }
                 },
               ),
@@ -344,6 +368,7 @@ class _ReadingState extends State<Reading> {
                   vertical: 10,
                 ),
                 child: SingleChildScrollView(
+                  controller: scrollController, // إضافة الـ controller هنا
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: _getCurrentPageVerses(),

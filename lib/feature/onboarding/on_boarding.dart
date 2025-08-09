@@ -234,7 +234,7 @@ class _OnboardingState extends State<Onboarding> {
     await CachHelper.saveData(key: 'total_minutes', value: 0);
     await CachHelper.saveData(key: 'selected_surah', value: 1);
 
-    await NotificationService().scheduleReminders(
+    await NotificationService().scheduleAdvancedReminders(
       userName: nameController.text.trim(),
       frequency: selectedFrequency,
       duration: selectedDuration,
