@@ -24,20 +24,29 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "changeLanguage": MessageLookupByLibrary.simpleMessage("Change Language"),
     "daily": MessageLookupByLibrary.simpleMessage("Dialy"),
+    "extend": MessageLookupByLibrary.simpleMessage("Extend +5min"),
+    "finish": MessageLookupByLibrary.simpleMessage("Finish"),
+    "from": MessageLookupByLibrary.simpleMessage("of"),
     "minutes": MessageLookupByLibrary.simpleMessage("min"),
     "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
     "nextMinutes": MessageLookupByLibrary.simpleMessage("next minutes?"),
+    "nextPage": MessageLookupByLibrary.simpleMessage("Next Page"),
     "nextReminder": MessageLookupByLibrary.simpleMessage("Next reminder"),
     "onboardingTitle": MessageLookupByLibrary.simpleMessage(
       "Let\'s set up your Quran reading routine",
     ),
+    "page": MessageLookupByLibrary.simpleMessage("Page"),
+    "pause": MessageLookupByLibrary.simpleMessage("Pause"),
+    "previousPage": MessageLookupByLibrary.simpleMessage("Previous Page"),
     "putYourName": MessageLookupByLibrary.simpleMessage("Put your name"),
+    "reading": MessageLookupByLibrary.simpleMessage("Reading"),
     "readingFrequency": MessageLookupByLibrary.simpleMessage(
       "Reading Frequency:",
     ),
     "readyForYour": MessageLookupByLibrary.simpleMessage("Ready for your "),
     "remindMeAt": MessageLookupByLibrary.simpleMessage("Remind me at"),
     "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time:"),
+    "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "saveSettings": MessageLookupByLibrary.simpleMessage("Save Settings"),
     "sessionDuration": MessageLookupByLibrary.simpleMessage(
       "Session Duration:",
@@ -46,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsSaved": MessageLookupByLibrary.simpleMessage(
       "Settings saved! Notifications updated.",
     ),
+    "start": MessageLookupByLibrary.simpleMessage("Start"),
     "startMyJourney": MessageLookupByLibrary.simpleMessage("Start My Journey"),
     "startReading": MessageLookupByLibrary.simpleMessage("Start Reading"),
     "thisFieldIsRequired": MessageLookupByLibrary.simpleMessage(

@@ -19,5 +19,15 @@
   "nextReminder": "Next reminder",
   "setting": "Settings",
   "saveSettings": "Save Settings",
-  "settingsSaved": "Settings saved! Notifications updated."
+  "settingsSaved": "Settings saved! Notifications updated.",
+  "reading": "Reading",
+  "pause": "Pause",
+  "start": "Start",
+  "reset": "Reset",
+  "page": "Page",
+  "from": "of",
+  "nextPage": "Next Page",
+  "previousPage": "Previous Page",
+  "extend": "Extend +5min",
+  "finish": "Finish"
 }

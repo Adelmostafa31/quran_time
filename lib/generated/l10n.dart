@@ -228,6 +228,61 @@ class S {
       args: [],
     );
   }
+
+  /// `Reading`
+  String get reading {
+    return Intl.message('Reading', name: 'reading', desc: '', args: []);
+  }
+
+  /// `Pause`
+  String get pause {
+    return Intl.message('Pause', name: 'pause', desc: '', args: []);
+  }
+
+  /// `Start`
+  String get start {
+    return Intl.message('Start', name: 'start', desc: '', args: []);
+  }
+
+  /// `Reset`
+  String get reset {
+    return Intl.message('Reset', name: 'reset', desc: '', args: []);
+  }
+
+  /// `Page`
+  String get page {
+    return Intl.message('Page', name: 'page', desc: '', args: []);
+  }
+
+  /// `of`
+  String get from {
+    return Intl.message('of', name: 'from', desc: '', args: []);
+  }
+
+  /// `Next Page`
+  String get nextPage {
+    return Intl.message('Next Page', name: 'nextPage', desc: '', args: []);
+  }
+
+  /// `Previous Page`
+  String get previousPage {
+    return Intl.message(
+      'Previous Page',
+      name: 'previousPage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extend +5min`
+  String get extend {
+    return Intl.message('Extend +5min', name: 'extend', desc: '', args: []);
+  }
+
+  /// `Finish`
+  String get finish {
+    return Intl.message('Finish', name: 'finish', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

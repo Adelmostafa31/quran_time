@@ -1,9 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:quran_time/core/helper/cach_helper.dart';
+import 'package:quran_time/core/helper/extentions.dart';
+import 'package:quran_time/core/theming/colors.dart';
+import 'package:quran_time/core/theming/styles.dart';
+import 'package:quran_time/feature/reading/drop_down_list_by_id.dart'
+    show DropDownListByIdAR;
+import 'package:quran_time/generated/l10n.dart';
 
 class Reading extends StatefulWidget {
   final int duration;
@@ -187,227 +194,251 @@ class _ReadingState extends State<Reading> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Quran Reading - ${quran.getSurahNameArabic(selectedSurahId)}',
-          style: GoogleFonts.amiriQuran(),
-        ),
-        backgroundColor: const Color(0xFF1B5E20),
+        title: Text(S.of(context).reading, style: TextStyles.font16WhiteBold),
+        backgroundColor: ColorsManager.mainColor,
         foregroundColor: Colors.white,
-        toolbarHeight: 40,
-      ),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(5),
-            color: const Color(0xFF1B5E20),
-            child: Column(
-              children: [
+        actions: [
+          Row(
+            spacing: 10.w,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (!isCompleted) ...[
+                GestureDetector(
+                  onTap: isRunning ? pauseTimer : startTimer,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    height: 25.h,
+                    width: 70.w,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isRunning
+                          ? ColorsManager.yellow
+                          : ColorsManager.white,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text(
+                      isRunning ? S.of(context).pause : S.of(context).start,
+                      style: isRunning
+                          ? TextStyles.font14WhiteBold
+                          : TextStyles.font14MainColorBold,
+                    ),
+                  ),
+                ),
                 Text(
                   formattedTime,
-                  style: const TextStyle(
-                    fontSize: 48,
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: ColorsManager.white,
+                    // fontFamily: 'Cairo',
                   ),
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (!isCompleted) ...[
-                      ElevatedButton(
-                        onPressed: isRunning ? pauseTimer : startTimer,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF1B5E20),
-                        ),
-                        child: Text(isRunning ? 'Pause' : 'Start'),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: resetTimer,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white70,
-                          foregroundColor: const Color(0xFF1B5E20),
-                        ),
-                        child: const Text('Reset'),
-                      ),
-                    ],
-                  ],
+                GestureDetector(
+                  onTap: resetTimer,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    height: 25.h,
+                    width: 70.w,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: ColorsManager.white,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text(
+                      S.of(context).reset,
+                      style: TextStyles.font14MainColorBold,
+                    ),
+                  ),
                 ),
               ],
-            ),
+            ],
           ),
-          if (isCompleted) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              color: const Color(0xFF2E7D32),
-              child: Column(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.white, size: 50),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'مبروك! الله يتقبل منك',
-                    style: TextStyle(
-                      fontSize: 24,
+        ],
+      ),
+      body: SafeArea(
+        bottom: true,
+        top: false,
+        left: false,
+        right: false,
+        child: Column(
+          children: [
+            if (isCompleted) ...[
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                color: ColorsManager.mainColor,
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.check_circle,
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      size: 40,
                     ),
-                    textAlign: TextAlign.center,
+                    10.height,
+                    const Text(
+                      'مبروك! الله يتقبل منك',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: ColorsManager.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    15.height,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => extendTimer(5),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: ColorsManager.mainColor,
+                          ),
+                          child: Text(
+                            S.of(context).extend,
+                            style: TextStyles.font12MainColorBold,
+                          ),
+                        ),
+                        10.width,
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white70,
+                            foregroundColor: const Color(0xFF2E7D32),
+                          ),
+                          child: Text(
+                            S.of(context).finish,
+                            style: TextStyles.font12MainColorBold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: DropDownListByIdAR(
+                text: '',
+                selectedValue: selectedSurahId,
+                textEditingController:
+                    TextEditingController(), // Add a controller
+                hint: '',
+                onChanged: (int? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      selectedSurahId = newValue;
+                      currentPage = 1;
+                      _calculatePages();
+                    });
+                    _saveSelectedSurah(newValue);
+                  }
+                },
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _getCurrentPageVerses(),
                   ),
-                  const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => extendTimer(5),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF2E7D32),
-                        ),
-                        child: const Text('Extend +5min'),
+                ),
+              ),
+            ),
+            // أزرار التنقل بين الصفحات
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              decoration: const BoxDecoration(color: Colors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: currentPage > 1 ? _previousPage : null,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 12,
                       ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white70,
-                          foregroundColor: const Color(0xFF2E7D32),
-                        ),
-                        child: const Text('Finish'),
+                      decoration: BoxDecoration(
+                        color: currentPage > 1
+                            ? ColorsManager.mainColor
+                            : ColorsManager.grey,
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
-                    ],
+                      child: Row(
+                        spacing: 5.w,
+                        children: [
+                          const Icon(
+                            Icons.keyboard_arrow_right,
+                            color: ColorsManager.white,
+                            size: 13,
+                          ),
+                          Text(
+                            S.of(context).previousPage,
+                            style: TextStyles.font12WhiteBold,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: ColorsManager.yellow,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      '$currentPage / $totalPages',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: currentPage < totalPages ? _nextPage : null,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: currentPage < totalPages
+                            ? ColorsManager.mainColor
+                            : ColorsManager.grey,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Row(
+                        spacing: 5.w,
+                        children: [
+                          Text(
+                            S.of(context).nextPage,
+                            style: TextStyles.font12WhiteBold,
+                          ),
+                          const Icon(
+                            Icons.keyboard_arrow_left,
+                            color: ColorsManager.white,
+                            size: 15,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
           ],
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: DropdownButton<int>(
-                    value: selectedSurahId,
-                    isExpanded: true,
-                    hint: Text('Select Surah', style: GoogleFonts.amiri()),
-                    items: List.generate(114, (index) {
-                      final surahNumber = index + 1;
-                      return DropdownMenuItem<int>(
-                        value: surahNumber,
-                        child: Text(
-                          '${quran.getSurahNameArabic(surahNumber)} (${quran.getSurahNameEnglish(surahNumber)})',
-                          style: GoogleFonts.amiri(),
-                        ),
-                      );
-                    }),
-                    onChanged: (int? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          selectedSurahId = newValue;
-                          currentPage = 1; // العودة للصفحة الأولى
-                          _calculatePages();
-                        });
-                        _saveSelectedSurah(newValue);
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1B5E20),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'صفحة $currentPage من $totalPages',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: SingleChildScrollView(
-                child: Column(children: _getCurrentPageVerses()),
-              ),
-            ),
-          ),
-          // أزرار التنقل بين الصفحات
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              border: Border(
-                top: BorderSide(color: Colors.grey[300]!, width: 1),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: currentPage > 1 ? _previousPage : null,
-                  icon: const Icon(Icons.arrow_back_ios),
-                  label: const Text('الصفحة السابقة'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: currentPage > 1
-                        ? const Color(0xFF1B5E20)
-                        : Colors.grey[400],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1B5E20),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    '$currentPage / $totalPages',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: currentPage < totalPages ? _nextPage : null,
-                  icon: const Icon(Icons.arrow_forward_ios),
-                  label: const Text('الصفحة التالية'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: currentPage < totalPages
-                        ? const Color(0xFF1B5E20)
-                        : Colors.grey[400],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
