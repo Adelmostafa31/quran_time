@@ -54,11 +54,26 @@ class _ReadingState extends State<Reading> {
     setState(() {
       selectedSurahId = CachHelper.getData(key: 'selected_surah') ?? 1;
       _calculatePages();
+      // استرجاع آخر صفحة محفوظة للسورة المحددة
+      currentPage =
+          CachHelper.getData(key: 'surah_${selectedSurahId}_last_page') ?? 1;
+      // التأكد أن الصفحة لا تتجاوز العدد الكلي للصفحات
+      if (currentPage > totalPages) {
+        currentPage = 1;
+      }
     });
   }
 
   Future<void> _saveSelectedSurah(int surahId) async {
     await CachHelper.saveData(key: 'selected_surah', value: surahId);
+  }
+
+  // دالة جديدة لحفظ آخر صفحة في السورة الحالية
+  Future<void> _saveCurrentPage() async {
+    await CachHelper.saveData(
+      key: 'surah_${selectedSurahId}_last_page',
+      value: currentPage,
+    );
   }
 
   void startTimer() {
@@ -137,6 +152,8 @@ class _ReadingState extends State<Reading> {
       });
       // التمرير إلى أعلى الصفحة
       _scrollToTop();
+      // حفظ الصفحة الحالية
+      _saveCurrentPage();
     }
   }
 
@@ -148,6 +165,8 @@ class _ReadingState extends State<Reading> {
       });
       // التمرير إلى أعلى الصفحة
       _scrollToTop();
+      // حفظ الصفحة الحالية
+      _saveCurrentPage();
     }
   }
 

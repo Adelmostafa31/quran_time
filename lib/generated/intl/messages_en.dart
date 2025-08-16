@@ -43,7 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "readingFrequency": MessageLookupByLibrary.simpleMessage(
       "Reading Frequency:",
     ),
-    "readyForYour": MessageLookupByLibrary.simpleMessage("Ready for your "),
+    "readyForYour": MessageLookupByLibrary.simpleMessage("Ready for your"),
     "remindMeAt": MessageLookupByLibrary.simpleMessage("Remind me at"),
     "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time:"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),

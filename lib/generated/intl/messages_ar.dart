@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "extend": MessageLookupByLibrary.simpleMessage("تمديد 5 دقايق"),
     "finish": MessageLookupByLibrary.simpleMessage("انهاء"),
     "from": MessageLookupByLibrary.simpleMessage("من"),
-    "minutes": MessageLookupByLibrary.simpleMessage("دقيقة"),
+    "minutes": MessageLookupByLibrary.simpleMessage("دق"),
     "monthly": MessageLookupByLibrary.simpleMessage("شهريا"),
     "nextMinutes": MessageLookupByLibrary.simpleMessage("الدقائق القادم؟"),
     "nextPage": MessageLookupByLibrary.simpleMessage("الصفحة التالية"),

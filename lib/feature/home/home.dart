@@ -105,7 +105,7 @@ class _HomeState extends State<Home> {
                   ),
                   15.height,
                   Text(
-                    '${S.of(context).readyForYour}$duration ${S.of(context).nextMinutes}',
+                    '${S.of(context).readyForYour} $duration ${S.of(context).nextMinutes}',
                     style: TextStyles.font16MainColorBold,
                     textAlign: TextAlign.center,
                   ),

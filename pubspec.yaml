@@ -38,7 +38,7 @@ flutter:
   fonts:
     - family: Cairo
       fonts:
-        - asset: assets/fonts/CairoPlay-Regular.ttf
+        - asset: assets/fonts/Cairo-Regular.ttf
 
 flutter_assets:
   assets_path: assets/images/

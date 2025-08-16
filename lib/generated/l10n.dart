@@ -174,10 +174,10 @@ class S {
     );
   }
 
-  /// `Ready for your `
+  /// `Ready for your`
   String get readyForYour {
     return Intl.message(
-      'Ready for your ',
+      'Ready for your',
       name: 'readyForYour',
       desc: '',
       args: [],
