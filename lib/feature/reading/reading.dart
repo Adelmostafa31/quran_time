@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:quran_time/core/helper/cach_helper.dart';
 import 'package:quran_time/core/helper/constant.dart';
@@ -251,7 +250,8 @@ class _ReadingState extends State<Reading> {
                   children: [
                     Text(
                       'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ',
-                      style: GoogleFonts.amiri(
+                      style: TextStyle(
+                        fontFamily: 'amiri',
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
                         color: ColorsManager.mainColor,
@@ -263,23 +263,13 @@ class _ReadingState extends State<Reading> {
                     ),
                     Text(
                       '${quran.getPlaceOfRevelation(selectedSurahId) == 'Makkah' ? 'مَكِّيَّة' : 'مَدَنِيَّة'} • ${quran.getVerseCount(selectedSurahId)} آية',
-                      style: GoogleFonts.cairo(
-                        fontSize: 14.sp,
-                        color: ColorsManager.mainColor,
-                        height: 2.0,
-                        letterSpacing: 1.0,
-                      ),
+                      style: TextStyles.font14MainColorBold,
                       textAlign: TextAlign.center,
                       textDirection: TextDirection.rtl,
                     ),
                     Text(
                       '• $totalPages صفحة',
-                      style: GoogleFonts.cairo(
-                        fontSize: 14.sp,
-                        color: ColorsManager.mainColor,
-                        height: 2.0,
-                        letterSpacing: 1.0,
-                      ),
+                      style: TextStyles.font12MainColor,
                       textAlign: TextAlign.center,
                       textDirection: TextDirection.rtl,
                     ),
@@ -320,11 +310,12 @@ class _ReadingState extends State<Reading> {
       textSpans.add(
         TextSpan(
           text: verseText,
-          style: GoogleFonts.amiri(
-            fontSize: 17.sp,
+          style: TextStyle(
+            fontFamily: 'amiri',
+            fontSize: 18.sp,
             height: 2.2,
             color: Colors.black87,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
             letterSpacing: 0.3,
           ),
         ),
@@ -334,27 +325,30 @@ class _ReadingState extends State<Reading> {
       textSpans.addAll([
         TextSpan(
           text: ' ﴿',
-          style: GoogleFonts.amiri(
+          style: TextStyle(
+            fontFamily: 'amiri',
             fontSize: 17.sp,
             height: 2.2,
-            color: const Color.fromARGB(255, 183, 138, 3), // لون مختلف للفاصلة
+            color: const Color.fromARGB(255, 183, 138, 3),
             fontWeight: FontWeight.w600,
             letterSpacing: 0.3,
           ),
         ),
         TextSpan(
           text: '$verseNumber',
-          style: GoogleFonts.amiri(
+          style: TextStyle(
+            fontFamily: 'amiri',
             fontSize: 17.sp,
             height: 2.2,
-            color: const Color.fromARGB(255, 192, 145, 5),
+            color: const Color.fromARGB(255, 183, 138, 3),
             fontWeight: FontWeight.w600,
             letterSpacing: 0.3,
           ),
         ),
         TextSpan(
           text: '﴾',
-          style: GoogleFonts.amiri(
+          style: TextStyle(
+            fontFamily: 'amiri',
             fontSize: 17.sp,
             height: 2.2,
             color: const Color.fromARGB(255, 183, 138, 3),
@@ -369,7 +363,8 @@ class _ReadingState extends State<Reading> {
         textSpans.add(
           TextSpan(
             text: ' ',
-            style: GoogleFonts.amiri(
+            style: TextStyle(
+              fontFamily: 'amiri',
               fontSize: 17.sp,
               height: 2.2,
               color: Colors.black87,

@@ -99,9 +99,9 @@ class S {
     );
   }
 
-  /// `Dialy`
+  /// `Daily`
   String get daily {
-    return Intl.message('Dialy', name: 'daily', desc: '', args: []);
+    return Intl.message('Daily', name: 'daily', desc: '', args: []);
   }
 
   /// `Weekly`

@@ -43,7 +43,6 @@ class NotificationService {
   // معالجة الضغط على الإشعار
   void _onNotificationTapped(NotificationResponse response) {
     // يمكن إضافة navigation للتطبيق هنا
-    print('تم الضغط على الإشعار: ${response.payload}');
   }
 
   Future<bool> requestPermissions() async {
