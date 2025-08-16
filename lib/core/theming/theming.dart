@@ -266,6 +266,14 @@ ThemeData theme() => ThemeData(
       borderRadius: BorderRadius.all(Radius.circular(16)),
     ),
   ),
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    elevation: 0,
+    backgroundColor: ColorsManager.white,
+    selectedItemColor: ColorsManager.mainColor,
+    unselectedItemColor: ColorsManager.grey,
+    selectedIconTheme: IconThemeData(color: ColorsManager.mainColor),
+    unselectedIconTheme: IconThemeData(color: ColorsManager.grey),
+  ),
   applyElevationOverlayColor: false,
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{

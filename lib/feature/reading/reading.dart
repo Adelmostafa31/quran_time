@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:quran_time/core/helper/cach_helper.dart';
+import 'package:quran_time/core/helper/constant.dart';
 import 'package:quran_time/core/helper/extentions.dart';
 import 'package:quran_time/core/theming/colors.dart';
 import 'package:quran_time/core/theming/styles.dart';
@@ -181,6 +182,24 @@ class _ReadingState extends State<Reading> {
     }
   }
 
+  // دالة للحصول على النص القرآني بالرسم العثماني
+  String _getUthmaniVerse(int surahNumber, int verseNumber) {
+    // هنا يمكنك استخدام مكتبة للنص العثماني أو قاعدة بيانات
+    // في هذا المثال سأستخدم النص العادي مع تحسينات التنسيق
+    String verse = quran.getVerse(
+      surahNumber,
+      verseNumber,
+      verseEndSymbol: false,
+    );
+
+    // تطبيق بعض التحسينات للنص ليبدو أكثر شبهاً بالرسم العثماني
+    verse = verse.replaceAll('ء', 'ٔ'); // همزة على واو
+    verse = verse.replaceAll('أ', 'ٱ'); // ألف وصل
+    verse = verse.replaceAll('إ', 'ٱ'); // ألف وصل
+
+    return verse;
+  }
+
   List<Widget> _getCurrentPageVerses() {
     int startVerse = (currentPage - 1) * versesPerPage + 1;
     int endVerse = (currentPage * versesPerPage).clamp(
@@ -188,40 +207,210 @@ class _ReadingState extends State<Reading> {
       quran.getVerseCount(selectedSurahId),
     );
 
-    List<Widget> verses = [];
+    List<Widget> content = [];
 
     // إضافة البسملة في الصفحة الأولى فقط (إلا سورة التوبة)
     if (currentPage == 1 && selectedSurahId != 9) {
-      verses.add(
-        Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Text(
-            quran.basmala,
-            style: GoogleFonts.amiriQuran(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+      content.add(
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 25),
+          child: Column(
+            children: [
+              // خط فاصل علوي مزخرف
+              Container(
+                height: 3,
+                width: 200,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      ColorsManager.mainColor.withOpacity(0.3),
+                      ColorsManager.mainColor,
+                      ColorsManager.mainColor.withOpacity(0.3),
+                      Colors.transparent,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // البسملة بالخط المناسب للرسم العثماني
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: ColorsManager.mainColor.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(
+                    color: ColorsManager.mainColor.withOpacity(0.2),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  spacing: 10.h,
+                  children: [
+                    Text(
+                      'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ',
+                      style: GoogleFonts.amiri(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        color: ColorsManager.mainColor,
+                        height: 2.0,
+                        letterSpacing: 1.0,
+                      ),
+                      textAlign: TextAlign.center,
+                      textDirection: TextDirection.rtl,
+                    ),
+                    Text(
+                      '${quran.getPlaceOfRevelation(selectedSurahId) == 'Makkah' ? 'مَكِّيَّة' : 'مَدَنِيَّة'} • ${quran.getVerseCount(selectedSurahId)} آية',
+                      style: GoogleFonts.cairo(
+                        fontSize: 14.sp,
+                        color: ColorsManager.mainColor,
+                        height: 2.0,
+                        letterSpacing: 1.0,
+                      ),
+                      textAlign: TextAlign.center,
+                      textDirection: TextDirection.rtl,
+                    ),
+                    Text(
+                      '• $totalPages صفحة',
+                      style: GoogleFonts.cairo(
+                        fontSize: 14.sp,
+                        color: ColorsManager.mainColor,
+                        height: 2.0,
+                        letterSpacing: 1.0,
+                      ),
+                      textAlign: TextAlign.center,
+                      textDirection: TextDirection.rtl,
+                    ),
+                  ],
+                ),
+              ),
+              // خط فاصل سفلي مزخرف
+              Container(
+                height: 3,
+                width: 200,
+                margin: const EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      ColorsManager.mainColor.withOpacity(0.3),
+                      ColorsManager.mainColor,
+                      ColorsManager.mainColor.withOpacity(0.3),
+                      Colors.transparent,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ],
           ),
         ),
       );
     }
+
+    // بناء محتوى الصفحة مع الآيات
+    List<TextSpan> textSpans = [];
 
     for (int verseNumber = startVerse; verseNumber <= endVerse; verseNumber++) {
-      verses.add(
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Text(
-            quran.getVerse(selectedSurahId, verseNumber, verseEndSymbol: true),
-            style: GoogleFonts.amiriQuran(fontSize: 20, height: 2.2),
-            textAlign: TextAlign.justify,
-            textDirection: TextDirection.rtl,
+      String verseText = _getUthmaniVerse(selectedSurahId, verseNumber);
+
+      // إضافة نص الآية
+      textSpans.add(
+        TextSpan(
+          text: verseText,
+          style: GoogleFonts.amiri(
+            fontSize: 17.sp,
+            height: 2.2,
+            color: Colors.black87,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3,
           ),
         ),
       );
+
+      // إضافة رقم الآية مع الفواصل الملونة
+      textSpans.addAll([
+        TextSpan(
+          text: ' ﴿',
+          style: GoogleFonts.amiri(
+            fontSize: 17.sp,
+            height: 2.2,
+            color: const Color.fromARGB(255, 183, 138, 3), // لون مختلف للفاصلة
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3,
+          ),
+        ),
+        TextSpan(
+          text: '$verseNumber',
+          style: GoogleFonts.amiri(
+            fontSize: 17.sp,
+            height: 2.2,
+            color: const Color.fromARGB(255, 192, 145, 5),
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3,
+          ),
+        ),
+        TextSpan(
+          text: '﴾',
+          style: GoogleFonts.amiri(
+            fontSize: 17.sp,
+            height: 2.2,
+            color: const Color.fromARGB(255, 183, 138, 3),
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3,
+          ),
+        ),
+      ]);
+
+      // إضافة مساحة بعد الآية إلا إذا كانت الآية الأخيرة
+      if (verseNumber < endVerse) {
+        textSpans.add(
+          TextSpan(
+            text: ' ',
+            style: GoogleFonts.amiri(
+              fontSize: 17.sp,
+              height: 2.2,
+              color: Colors.black87,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+            ),
+          ),
+        );
+      }
     }
 
-    return verses;
+    // container واحد يحتوي على جميع الآيات
+    content.add(
+      Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.15),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+          border: Border.all(
+            color: ColorsManager.mainColor.withOpacity(0.15),
+            width: 1.5,
+          ),
+        ),
+        child: RichText(
+          text: TextSpan(children: textSpans),
+          textAlign: TextAlign.justify,
+          textDirection: TextDirection.rtl,
+        ),
+      ),
+    );
+
+    return content;
   }
 
   @override
@@ -234,10 +423,12 @@ class _ReadingState extends State<Reading> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsManager.white,
       appBar: AppBar(
         title: Text(S.of(context).reading, style: TextStyles.font16WhiteBold),
         backgroundColor: ColorsManager.mainColor,
         foregroundColor: Colors.white,
+        elevation: 2,
         actions: [
           Row(
             spacing: 10.w,
@@ -248,14 +439,21 @@ class _ReadingState extends State<Reading> {
                   onTap: isRunning ? pauseTimer : startTimer,
                   behavior: HitTestBehavior.opaque,
                   child: Container(
-                    height: 25.h,
-                    width: 70.w,
+                    height: 30.h,
+                    width: 75.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: isRunning
                           ? ColorsManager.yellow
                           : ColorsManager.white,
-                      borderRadius: BorderRadius.circular(20.r),
+                      borderRadius: BorderRadius.circular(25.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Text(
                       isRunning ? S.of(context).pause : S.of(context).start,
@@ -268,22 +466,28 @@ class _ReadingState extends State<Reading> {
                 Text(
                   formattedTime,
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                     color: ColorsManager.white,
-                    // fontFamily: 'Cairo',
                   ),
                 ),
                 GestureDetector(
                   onTap: resetTimer,
                   behavior: HitTestBehavior.opaque,
                   child: Container(
-                    height: 25.h,
-                    width: 70.w,
+                    height: 30.h,
+                    width: 75.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: ColorsManager.white,
-                      borderRadius: BorderRadius.circular(20.r),
+                      borderRadius: BorderRadius.circular(25.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Text(
                       S.of(context).reset,
@@ -306,26 +510,35 @@ class _ReadingState extends State<Reading> {
             if (isCompleted) ...[
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                color: ColorsManager.mainColor,
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      ColorsManager.mainColor,
+                      ColorsManager.mainColor.withOpacity(0.8),
+                    ],
+                  ),
+                ),
                 child: Column(
                   children: [
                     const Icon(
                       Icons.check_circle,
                       color: Colors.white,
-                      size: 40,
+                      size: 50,
                     ),
-                    10.height,
+                    15.height,
                     const Text(
                       'مبروك! الله يتقبل منك',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 28,
                         color: ColorsManager.white,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    15.height,
+                    20.height,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -334,22 +547,30 @@ class _ReadingState extends State<Reading> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: ColorsManager.mainColor,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
                           ),
                           child: Text(
                             S.of(context).extend,
-                            style: TextStyles.font12MainColorBold,
+                            style: TextStyles.font14MainColorBold,
                           ),
                         ),
-                        10.width,
+                        15.width,
                         ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white70,
                             foregroundColor: const Color(0xFF2E7D32),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
                           ),
                           child: Text(
                             S.of(context).finish,
-                            style: TextStyles.font12MainColorBold,
+                            style: TextStyles.font14MainColorBold,
                           ),
                         ),
                       ],
@@ -359,12 +580,11 @@ class _ReadingState extends State<Reading> {
               ),
             ],
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: DropDownListByIdAR(
                 text: '',
                 selectedValue: selectedSurahId,
-                textEditingController:
-                    TextEditingController(), // Add a controller
+                textEditingController: TextEditingController(),
                 hint: '',
                 onChanged: (int? newValue) {
                   if (newValue != null) {
@@ -384,10 +604,10 @@ class _ReadingState extends State<Reading> {
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
-                  vertical: 10,
+                  vertical: 15,
                 ),
                 child: SingleChildScrollView(
-                  controller: scrollController, // إضافة الـ controller هنا
+                  controller: scrollController,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: _getCurrentPageVerses(),
@@ -395,90 +615,118 @@ class _ReadingState extends State<Reading> {
                 ),
               ),
             ),
-            // أزرار التنقل بين الصفحات
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              decoration: const BoxDecoration(color: Colors.white),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: currentPage > 1 ? _previousPage : null,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: currentPage > 1
-                            ? ColorsManager.mainColor
-                            : ColorsManager.grey,
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Row(
-                        spacing: 5.w,
-                        children: [
-                          const Icon(
-                            Icons.keyboard_arrow_right,
-                            color: ColorsManager.white,
-                            size: 13,
-                          ),
-                          Text(
-                            S.of(context).previousPage,
-                            style: TextStyles.font12WhiteBold,
-                          ),
-                        ],
+            SafeArea(
+              top: false,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                margin: const EdgeInsets.only(top: 15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      blurRadius: 5,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // زر الصفحة السابقة
+                    GestureDetector(
+                      onTap: currentPage > 1 ? _previousPage : null,
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 15,
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: currentPage > 1
+                              ? LinearGradient(
+                                  colors: [
+                                    ColorsManager.mainColor,
+                                    ColorsManager.mainColor.withOpacity(0.8),
+                                  ],
+                                )
+                              : const LinearGradient(
+                                  colors: [
+                                    ColorsManager.grey,
+                                    ColorsManager.grey,
+                                  ],
+                                ),
+                          boxShadow: currentPage > 1
+                              ? [
+                                  BoxShadow(
+                                    color: ColorsManager.mainColor.withOpacity(
+                                      0.3,
+                                    ),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Icon(
+                          Constant.isArabic()
+                              ? Icons.keyboard_arrow_right
+                              : Icons.keyboard_arrow_left,
+                          color: ColorsManager.white,
+                          size: 16,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: ColorsManager.yellow,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '$currentPage / $totalPages',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                    // عداد الصفحات
+                    Text('$currentPage', style: TextStyles.font16MainColorBold),
+                    GestureDetector(
+                      onTap: currentPage < totalPages ? _nextPage : null,
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 15,
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: currentPage < totalPages
+                              ? LinearGradient(
+                                  colors: [
+                                    ColorsManager.mainColor,
+                                    ColorsManager.mainColor.withOpacity(0.8),
+                                  ],
+                                )
+                              : const LinearGradient(
+                                  colors: [
+                                    ColorsManager.grey,
+                                    ColorsManager.grey,
+                                  ],
+                                ),
+                          boxShadow: currentPage < totalPages
+                              ? [
+                                  BoxShadow(
+                                    color: ColorsManager.mainColor.withOpacity(
+                                      0.3,
+                                    ),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Icon(
+                          Constant.isArabic()
+                              ? Icons.keyboard_arrow_left
+                              : Icons.keyboard_arrow_right,
+                          color: ColorsManager.white,
+                          size: 16,
+                        ),
                       ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: currentPage < totalPages ? _nextPage : null,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: currentPage < totalPages
-                            ? ColorsManager.mainColor
-                            : ColorsManager.grey,
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Row(
-                        spacing: 5.w,
-                        children: [
-                          Text(
-                            S.of(context).nextPage,
-                            style: TextStyles.font12WhiteBold,
-                          ),
-                          const Icon(
-                            Icons.keyboard_arrow_left,
-                            color: ColorsManager.white,
-                            size: 15,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
