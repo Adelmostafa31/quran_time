@@ -321,7 +321,7 @@ class _HomeState extends State<Home> {
                 ),
                 const Spacer(),
                 Text(
-                  '${((CachHelper.getData(key: 'completed_surahs_count') ?? 0) / 114).toStringAsFixed(2).substring(0, 4)} %',
+                  '${(((CachHelper.getData(key: 'completed_surahs_count') ?? 0) / 114).toDouble() * 100).toString().substring(0, 4)} %',
                   style: TextStyles.font16MainColorBold,
                 ),
               ],
