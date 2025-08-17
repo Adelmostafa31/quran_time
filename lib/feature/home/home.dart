@@ -82,6 +82,31 @@ class _HomeState extends State<Home> {
               ],
             ),
             20.height,
+            Row(
+              children: [
+                Text(
+                  S.of(context).completedSurahs,
+                  style: TextStyles.font16MainColorBold,
+                ),
+                const Spacer(),
+                Text(
+                  '${((CachHelper.getData(key: 'completed_surahs_count') ?? 0) / 114).toStringAsFixed(2).substring(0, 4)} %',
+                  style: TextStyles.font16MainColorBold,
+                ),
+              ],
+            ),
+            10.height,
+            LinearProgressIndicator(
+              value:
+                  double.parse(
+                    (CachHelper.getData(key: 'completed_surahs_count') ?? 0)
+                        .toString(),
+                  ) /
+                  114,
+              backgroundColor: Colors.grey[300],
+              color: ColorsManager.mainColor,
+            ),
+            20.height,
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
               decoration: BoxDecoration(

@@ -29,5 +29,7 @@
   "nextPage": "Next Page",
   "previousPage": "Previous Page",
   "extend": "Extend +5min",
-  "finish": "Finish"
+  "finish": "Finish",
+  "completedSurahs": "Completed Surahs",
+  "nextSurah": "Next Surah"
 }

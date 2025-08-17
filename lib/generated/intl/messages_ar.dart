@@ -23,6 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "changeLanguage": MessageLookupByLibrary.simpleMessage("تغيير اللغة"),
+    "completedSurahs": MessageLookupByLibrary.simpleMessage(
+      "عدد السور المكتملة",
+    ),
     "daily": MessageLookupByLibrary.simpleMessage("يوميًا"),
     "extend": MessageLookupByLibrary.simpleMessage("تمديد +5 دقائق"),
     "finish": MessageLookupByLibrary.simpleMessage("إنهاء"),
@@ -32,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nextMinutes": MessageLookupByLibrary.simpleMessage("الدقائق القادمة؟"),
     "nextPage": MessageLookupByLibrary.simpleMessage("الصفحة التالية"),
     "nextReminder": MessageLookupByLibrary.simpleMessage("التذكير القادم"),
+    "nextSurah": MessageLookupByLibrary.simpleMessage("السورة التالية"),
     "onboardingTitle": MessageLookupByLibrary.simpleMessage(
       "دعنا نضع إعدادات قراءة القرآن الكريم",
     ),

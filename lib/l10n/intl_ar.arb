@@ -29,5 +29,7 @@
   "nextPage": "الصفحة التالية",
   "previousPage": "الصفحة السابقة",
   "extend": "تمديد +5 دقائق",
-  "finish": "إنهاء"
+  "finish": "إنهاء",
+  "completedSurahs": "عدد السور المكتملة",
+  "nextSurah": "السورة التالية"
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,12 +37,23 @@ class _ReadingState extends State<Reading> {
   // إضافة ScrollController
   late ScrollController scrollController;
 
+  // متغير للمفضلة
+  List<int> favoriteSurahs = [];
+
+  // متغير لعدد السور المكتملة
+  int completedSurahsCount = 0;
+
+  // قائمة السور المكتملة لتجنب العد المكرر
+  Set<int> completedSurahs = {};
+
   @override
   void initState() {
     super.initState();
     remainingSeconds = widget.duration * 60;
     scrollController = ScrollController(); // تهيئة الـ controller
     _loadSelectedSurah();
+    _loadFavoriteSurahs();
+    _loadCompletedSurahs();
     _calculatePages();
   }
 
@@ -68,12 +80,147 @@ class _ReadingState extends State<Reading> {
     await CachHelper.saveData(key: 'selected_surah', value: surahId);
   }
 
+  // دالة لتحميل السور المفضلة
+  Future<void> _loadFavoriteSurahs() async {
+    String? favoritesJson = CachHelper.getData(key: 'favorite_surahs');
+    if (favoritesJson != null) {
+      List<dynamic> favoritesList = jsonDecode(favoritesJson);
+      setState(() {
+        favoriteSurahs = favoritesList.cast<int>();
+      });
+    }
+  }
+
+  // دالة لحفظ السور المفضلة
+  Future<void> _saveFavoriteSurahs() async {
+    String favoritesJson = jsonEncode(favoriteSurahs);
+    await CachHelper.saveData(key: 'favorite_surahs', value: favoritesJson);
+  }
+
+  // دالة لتحميل السور المكتملة
+  Future<void> _loadCompletedSurahs() async {
+    // تحميل عدد السور المكتملة
+    completedSurahsCount =
+        CachHelper.getData(key: 'completed_surahs_count') ?? 0;
+
+    // تحميل قائمة السور المكتملة
+    String? completedSurahsJson = CachHelper.getData(
+      key: 'completed_surahs_list',
+    );
+    if (completedSurahsJson != null) {
+      List<dynamic> completedList = jsonDecode(completedSurahsJson);
+      setState(() {
+        completedSurahs = completedList.cast<int>().toSet();
+      });
+    }
+  }
+
+  // دالة لحفظ السور المكتملة
+  Future<void> _saveCompletedSurahs() async {
+    await CachHelper.saveData(
+      key: 'completed_surahs_count',
+      value: completedSurahsCount,
+    );
+    String completedSurahsJson = jsonEncode(completedSurahs.toList());
+    await CachHelper.saveData(
+      key: 'completed_surahs_list',
+      value: completedSurahsJson,
+    );
+  }
+
+  // دالة للتحقق من اكتمال السورة وإضافتها للعداد
+  Future<void> _checkAndMarkSurahAsCompleted() async {
+    // إذا وصلنا لآخر صفحة في السورة ولم تكن مكتملة من قبل
+    if (currentPage == totalPages &&
+        !completedSurahs.contains(selectedSurahId)) {
+      setState(() {
+        completedSurahs.add(selectedSurahId);
+        completedSurahsCount++;
+      });
+
+      await _saveCompletedSurahs();
+
+      // إظهار رسالة تهنئة
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'مبروك! أكملت سورة ${quran.getSurahNameArabic(selectedSurahId)} ✨\nعدد السور المكتملة: $completedSurahsCount',
+            style: const TextStyle(fontFamily: 'Cairo'),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
+    }
+  }
+
+  // دالة لإضافة/إزالة السورة من المفضلة
+  void _toggleFavorite() {
+    setState(() {
+      if (favoriteSurahs.contains(selectedSurahId)) {
+        favoriteSurahs.remove(selectedSurahId);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'تم إزالة سورة ${quran.getSurahNameArabic(selectedSurahId)} من المفضلة',
+              style: const TextStyle(fontFamily: 'Cairo'),
+            ),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      } else {
+        favoriteSurahs.add(selectedSurahId);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'تم إضافة سورة ${quran.getSurahNameArabic(selectedSurahId)} إلى المفضلة',
+              style: const TextStyle(fontFamily: 'Cairo'),
+            ),
+            backgroundColor: ColorsManager.mainColor,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    });
+    _saveFavoriteSurahs();
+  }
+
+  // التحقق من وجود السورة في المفضلة
+  bool get isFavorite => favoriteSurahs.contains(selectedSurahId);
+
+  // التحقق من اكتمال السورة الحالية
+  bool get isSurahCompleted => completedSurahs.contains(selectedSurahId);
+
   // دالة جديدة لحفظ آخر صفحة في السورة الحالية
   Future<void> _saveCurrentPage() async {
     await CachHelper.saveData(
       key: 'surah_${selectedSurahId}_last_page',
       value: currentPage,
     );
+
+    // التحقق من اكتمال السورة عند حفظ الصفحة
+    await _checkAndMarkSurahAsCompleted();
+  }
+
+  // دالة جديدة للانتقال إلى السورة التالية
+  void _goToNextSurah() {
+    if (selectedSurahId < 114) {
+      // عدد سور القرآن الكريم
+      setState(() {
+        selectedSurahId++;
+        currentPage = 1;
+        _calculatePages();
+      });
+      _saveSelectedSurah(selectedSurahId);
+      _saveCurrentPage();
+      _scrollToTop();
+    }
   }
 
   void startTimer() {
@@ -261,17 +408,48 @@ class _ReadingState extends State<Reading> {
                       textAlign: TextAlign.center,
                       textDirection: TextDirection.rtl,
                     ),
-                    Text(
-                      '${quran.getPlaceOfRevelation(selectedSurahId) == 'Makkah' ? 'مَكِّيَّة' : 'مَدَنِيَّة'} • ${quran.getVerseCount(selectedSurahId)} آية',
-                      style: TextStyles.font14MainColorBold,
-                      textAlign: TextAlign.center,
-                      textDirection: TextDirection.rtl,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // عرض علامة الاكتمال إذا كانت السورة مكتملة
+                        if (isSurahCompleted) ...[
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 16.sp,
+                          ),
+                          5.width,
+                        ],
+                        Text(
+                          '${quran.getPlaceOfRevelation(selectedSurahId) == 'Makkah' ? 'مَكِّيَّة' : 'مَدَنِيَّة'} • ${quran.getVerseCount(selectedSurahId)} آية',
+                          style: TextStyles.font14MainColorBold,
+                          textAlign: TextAlign.center,
+                          textDirection: TextDirection.rtl,
+                        ),
+                      ],
                     ),
-                    Text(
-                      '• $totalPages صفحة',
-                      style: TextStyles.font12MainColor,
-                      textAlign: TextAlign.center,
-                      textDirection: TextDirection.rtl,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '• $totalPages صفحة',
+                          style: TextStyles.font12MainColor,
+                          textAlign: TextAlign.center,
+                          textDirection: TextDirection.rtl,
+                        ),
+                        if (completedSurahsCount > 0) ...[
+                          Text(
+                            ' • $completedSurahsCount سور مكتملة',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                            textDirection: TextDirection.rtl,
+                          ),
+                        ],
+                      ],
                     ),
                   ],
                 ),
@@ -393,8 +571,10 @@ class _ReadingState extends State<Reading> {
             ),
           ],
           border: Border.all(
-            color: ColorsManager.mainColor.withOpacity(0.15),
-            width: 1.5,
+            color: isSurahCompleted
+                ? Colors.green.withOpacity(0.3)
+                : ColorsManager.mainColor.withOpacity(0.15),
+            width: isSurahCompleted ? 2.5 : 1.5,
           ),
         ),
         child: RichText(
@@ -533,6 +713,18 @@ class _ReadingState extends State<Reading> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    if (completedSurahsCount > 0) ...[
+                      10.height,
+                      Text(
+                        'عدد السور المكتملة: $completedSurahsCount',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                     20.height,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -574,25 +766,69 @@ class _ReadingState extends State<Reading> {
                 ),
               ),
             ],
+            // إضافة الـ Row الذي يحتوي على الـ dropdown وزر المفضلة
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: DropDownListByIdAR(
-                text: '',
-                selectedValue: selectedSurahId,
-                textEditingController: TextEditingController(),
-                hint: '',
-                onChanged: (int? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      selectedSurahId = newValue;
-                      currentPage = 1;
-                      _calculatePages();
-                    });
-                    _saveSelectedSurah(newValue);
-                    // التمرير إلى أعلى عند تغيير السورة
-                    _scrollToTop();
-                  }
-                },
+              child: Row(
+                children: [
+                  // الـ DropDown
+                  Expanded(
+                    child: DropDownListByIdAR(
+                      text: '',
+                      selectedValue: selectedSurahId,
+                      textEditingController: TextEditingController(),
+                      hint: '',
+                      onChanged: (int? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedSurahId = newValue;
+                            currentPage = 1;
+                            _calculatePages();
+                          });
+                          _saveSelectedSurah(newValue);
+                          // التمرير إلى أعلى عند تغيير السورة
+                          _scrollToTop();
+                        }
+                      },
+                    ),
+                  ),
+                  15.width,
+                  // زر المفضلة
+                  GestureDetector(
+                    onTap: _toggleFavorite,
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      width: 35.w,
+                      height: 35.h,
+                      decoration: BoxDecoration(
+                        color: isFavorite ? ColorsManager.red : Colors.white,
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(
+                          color: isFavorite
+                              ? ColorsManager.red.withOpacity(0.1)
+                              : ColorsManager.mainColor,
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isFavorite
+                                ? ColorsManager.red.withOpacity(0.1)
+                                : Colors.white,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite
+                            ? Colors.white
+                            : ColorsManager.mainColor,
+                        size: 18.sp,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(
@@ -674,52 +910,150 @@ class _ReadingState extends State<Reading> {
                         ),
                       ),
                     ),
-                    // عداد الصفحات
-                    Text('$currentPage', style: TextStyles.font16MainColorBold),
-                    GestureDetector(
-                      onTap: currentPage < totalPages ? _nextPage : null,
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 15,
+                    // عداد الصفحات مع معلومات إضافية
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '$currentPage',
+                          style: TextStyles.font16MainColorBold,
                         ),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: currentPage < totalPages
-                              ? LinearGradient(
-                                  colors: [
-                                    ColorsManager.mainColor,
-                                    ColorsManager.mainColor.withOpacity(0.8),
-                                  ],
-                                )
-                              : const LinearGradient(
-                                  colors: [
-                                    ColorsManager.grey,
-                                    ColorsManager.grey,
-                                  ],
-                                ),
-                          boxShadow: currentPage < totalPages
-                              ? [
-                                  BoxShadow(
-                                    color: ColorsManager.mainColor.withOpacity(
-                                      0.3,
-                                    ),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ]
-                              : [],
-                        ),
-                        child: Icon(
-                          Constant.isArabic()
-                              ? Icons.keyboard_arrow_left
-                              : Icons.keyboard_arrow_right,
-                          color: ColorsManager.white,
-                          size: 16,
+                        if (isSurahCompleted) ...[
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 12.sp,
+                          ),
+                        ],
+                      ],
+                    ),
+
+                    // زر الصفحة التالية أو السورة التالية
+                    if (currentPage < totalPages) ...[
+                      // زر الصفحة التالية
+                      GestureDetector(
+                        onTap: _nextPage,
+                        behavior: HitTestBehavior.opaque,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 15,
+                          ),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                ColorsManager.mainColor,
+                                ColorsManager.mainColor.withOpacity(0.8),
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: ColorsManager.mainColor.withOpacity(0.3),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Constant.isArabic()
+                                ? Icons.keyboard_arrow_left
+                                : Icons.keyboard_arrow_right,
+                            color: ColorsManager.white,
+                            size: 16,
+                          ),
                         ),
                       ),
-                    ),
+                    ] else ...[
+                      // زر السورة التالية (يظهر فقط في آخر صفحة من السورة)
+                      if (selectedSurahId < 114) ...[
+                        GestureDetector(
+                          onTap: _goToNextSurah,
+                          behavior: HitTestBehavior.opaque,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 15,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25.r),
+                              gradient: LinearGradient(
+                                colors: [
+                                  ColorsManager.mainColor,
+                                  ColorsManager.mainColor.withOpacity(0.8),
+                                ],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: ColorsManager.mainColor.withOpacity(
+                                    0.3,
+                                  ),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  S.of(context).nextSurah,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                5.width,
+                                Icon(
+                                  Constant.isArabic()
+                                      ? Icons.keyboard_double_arrow_left
+                                      : Icons.keyboard_double_arrow_right,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ] else ...[
+                        // رسالة انتهاء القرآن
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 15,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25.r),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.green,
+                                Colors.green.withOpacity(0.8),
+                              ],
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.celebration,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                              5.width,
+                              Text(
+                                'انتهيت من القرآن',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
                   ],
                 ),
               ),

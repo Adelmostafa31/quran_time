@@ -23,6 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "changeLanguage": MessageLookupByLibrary.simpleMessage("Change Language"),
+    "completedSurahs": MessageLookupByLibrary.simpleMessage("Completed Surahs"),
     "daily": MessageLookupByLibrary.simpleMessage("Daily"),
     "extend": MessageLookupByLibrary.simpleMessage("Extend +5min"),
     "finish": MessageLookupByLibrary.simpleMessage("Finish"),
@@ -32,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nextMinutes": MessageLookupByLibrary.simpleMessage("next minutes?"),
     "nextPage": MessageLookupByLibrary.simpleMessage("Next Page"),
     "nextReminder": MessageLookupByLibrary.simpleMessage("Next reminder"),
+    "nextSurah": MessageLookupByLibrary.simpleMessage("Next Surah"),
     "onboardingTitle": MessageLookupByLibrary.simpleMessage(
       "Let\'s set up your Quran reading routine",
     ),

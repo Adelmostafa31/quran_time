@@ -283,6 +283,21 @@ class S {
   String get finish {
     return Intl.message('Finish', name: 'finish', desc: '', args: []);
   }
+
+  /// `Completed Surahs`
+  String get completedSurahs {
+    return Intl.message(
+      'Completed Surahs',
+      name: 'completedSurahs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next Surah`
+  String get nextSurah {
+    return Intl.message('Next Surah', name: 'nextSurah', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
