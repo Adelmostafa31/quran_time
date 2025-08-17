@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quran/quran.dart' as quran;
 import 'package:quran_time/core/helper/cach_helper.dart';
+import 'package:quran_time/core/helper/constant.dart';
 import 'package:quran_time/core/helper/extentions.dart';
 import 'package:quran_time/core/theming/colors.dart';
 import 'package:quran_time/core/theming/styles.dart';
@@ -22,11 +26,13 @@ class _HomeState extends State<Home> {
   int sessionsCompleted = 0;
   int totalMinutes = 0;
   TimeOfDay? reminderTime;
+  List<int> favoriteSurahs = [];
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _loadFavoriteSurahs();
   }
 
   Future<void> _loadUserData() async {
@@ -42,6 +48,123 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<void> _loadFavoriteSurahs() async {
+    String? favoritesJson = CachHelper.getData(key: 'favorite_surahs');
+    if (favoritesJson != null) {
+      List<dynamic> favoritesList = jsonDecode(favoritesJson);
+      setState(() {
+        favoriteSurahs = favoritesList.cast<int>();
+      });
+    }
+  }
+
+  void _showFavoriteSurahsDialog() {
+    if (favoriteSurahs.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'لا توجد سور مفضلة بعد. اضف بعض السور إلى المفضلة من صفحة القراءة',
+            style: TextStyle(fontFamily: 'Cairo'),
+          ),
+          backgroundColor: ColorsManager.mainColor,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.favorite, color: ColorsManager.red, size: 20.sp),
+              8.width,
+              Text(
+                'السور المفضلة',
+                style: TextStyles.font16MainColor,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 300.h,
+            child: ListView.builder(
+              itemCount: favoriteSurahs.length,
+              itemBuilder: (context, index) {
+                int surahId = favoriteSurahs[index];
+                return Card(
+                  elevation: 2,
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  color: ColorsManager.white,
+                  child: ListTile(
+                    leading: Container(
+                      width: 40.w,
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        color: ColorsManager.mainColor,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$surahId',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      quran.getSurahNameArabic(surahId),
+                      style: TextStyles.font14MainColorBold,
+                      textDirection: TextDirection.rtl,
+                    ),
+                    subtitle: Text(
+                      '${quran.getVerseCount(surahId)} آية • ${quran.getPlaceOfRevelation(surahId) == 'Makkah' ? 'مكية' : 'مدنية'}',
+                      style: TextStyles.font12Grey,
+                      textDirection: TextDirection.rtl,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: ColorsManager.mainColor,
+                      size: 16.sp,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop(); // إغلاق الحوار
+                      // حفظ السورة المختارة
+                      CachHelper.saveData(
+                        key: 'selected_surah',
+                        value: surahId,
+                      );
+                      // الانتقال لصفحة القراءة
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Reading(duration: duration),
+                        ),
+                      ).then((_) => _loadUserData());
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('إغلاق', style: TextStyles.font14MainColorBold),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,12 +172,53 @@ class _HomeState extends State<Home> {
         title: Text('مرحباً $userName', style: TextStyles.font16WhiteBold),
         backgroundColor: ColorsManager.mainColor,
         actions: [
+          // أيكون السور المفضلة
+          IconButton(
+            icon: Stack(
+              children: [
+                const Icon(Icons.favorite, color: ColorsManager.white),
+                if (favoriteSurahs.isNotEmpty)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 7, bottom: 7),
+                      decoration: BoxDecoration(
+                        color: ColorsManager.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 10,
+                        minHeight: 10,
+                      ),
+                      child: Text(
+                        '${favoriteSurahs.length}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            onPressed: _showFavoriteSurahsDialog,
+            tooltip: 'السور المفضلة',
+          ),
           IconButton(
             icon: const Icon(Icons.settings, color: ColorsManager.white),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
-            ).then((_) => _loadUserData()),
+            onPressed: () =>
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                ).then((_) {
+                  _loadUserData();
+                  _loadFavoriteSurahs();
+                }),
           ),
         ],
       ),
@@ -82,6 +246,73 @@ class _HomeState extends State<Home> {
               ],
             ),
             20.height,
+            // إضافة كارد السور المفضلة
+            if (favoriteSurahs.isNotEmpty) ...[
+              GestureDetector(
+                onTap: _showFavoriteSurahsDialog,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.w,
+                    vertical: 12.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ColorsManager.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: ColorsManager.mainColor.withOpacity(0.7),
+                      width: 2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: ColorsManager.red.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.favorite,
+                        color: ColorsManager.red,
+                        size: 24.sp,
+                      ),
+                      12.width,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              S.of(context).favorites,
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                color: ColorsManager.mainColor,
+                              ),
+                            ),
+                            2.height,
+                            Text(
+                              '${favoriteSurahs.length} ${S.of(context).saved}',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: ColorsManager.mainColor,
+                        size: 16.sp,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              15.height,
+            ],
             Row(
               children: [
                 Text(
@@ -129,11 +360,17 @@ class _HomeState extends State<Home> {
                     color: ColorsManager.mainColor,
                   ),
                   15.height,
-                  Text(
-                    '${S.of(context).readyForYour} $duration ${S.of(context).nextMinutes}',
-                    style: TextStyles.font16MainColorBold,
-                    textAlign: TextAlign.center,
-                  ),
+                  Constant.isArabic()
+                      ? Text(
+                          '$duration ${S.of(context).readyForYour}',
+                          style: TextStyles.font16MainColorBold,
+                          textAlign: TextAlign.center,
+                        )
+                      : Text(
+                          '${S.of(context).just} $duration ${S.of(context).readyForYour2}',
+                          style: TextStyles.font16MainColorBold,
+                          textAlign: TextAlign.center,
+                        ),
                   5.height,
                   if (reminderTime != null)
                     Text(
@@ -152,12 +389,16 @@ class _HomeState extends State<Home> {
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Reading(duration: duration),
-                ),
-              ).then((_) => _loadUserData()),
+              onPressed: () =>
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Reading(duration: duration),
+                    ),
+                  ).then((_) {
+                    _loadUserData();
+                    _loadFavoriteSurahs();
+                  }),
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorsManager.mainColor,
                 foregroundColor: ColorsManager.white,

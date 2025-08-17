@@ -35,6 +35,11 @@ class TextStyles {
     fontSize: 16.sp,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle font16MainColor = TextStyle(
+    fontFamily: 'Cairo',
+    color: ColorsManager.mainColor,
+    fontSize: 16.sp,
+  );
   static TextStyle font16MainColorBoldUnderLine = TextStyle(
     fontFamily: 'Cairo',
     color: ColorsManager.mainColor,

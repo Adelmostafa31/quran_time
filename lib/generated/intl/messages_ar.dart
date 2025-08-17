@@ -22,12 +22,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "changeLanguage": MessageLookupByLibrary.simpleMessage("تغيير اللغة"),
     "completedSurahs": MessageLookupByLibrary.simpleMessage(
       "عدد السور المكتملة",
     ),
     "daily": MessageLookupByLibrary.simpleMessage("يوميًا"),
     "extend": MessageLookupByLibrary.simpleMessage("تمديد +5 دقائق"),
+    "favorites": MessageLookupByLibrary.simpleMessage("السور المفضلة"),
     "finish": MessageLookupByLibrary.simpleMessage("إنهاء"),
     "from": MessageLookupByLibrary.simpleMessage("من"),
     "minutes": MessageLookupByLibrary.simpleMessage("دق"),
@@ -45,11 +47,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "putYourName": MessageLookupByLibrary.simpleMessage("ادخل اسمك"),
     "reading": MessageLookupByLibrary.simpleMessage("قراءة"),
     "readingFrequency": MessageLookupByLibrary.simpleMessage("تكرار القراءة:"),
-    "readyForYour": MessageLookupByLibrary.simpleMessage("مستعد لجلستك في"),
+    "readyForYour": MessageLookupByLibrary.simpleMessage(
+      "دقائق يومية تقرّبك من الله بقراءة القرآن الكريم",
+    ),
+    "readyForYour2": MessageLookupByLibrary.simpleMessage(""),
     "remindMeAt": MessageLookupByLibrary.simpleMessage("ذكرني في"),
     "reminderTime": MessageLookupByLibrary.simpleMessage("وقت التذكير:"),
     "reset": MessageLookupByLibrary.simpleMessage("إرجاع"),
+    "resetOriginal": MessageLookupByLibrary.simpleMessage(
+      "هل أنت متأكد من إرجاع جميع الإعدادات للحالة الأصلية؟\n\nسيتم إرجاع:\n• التكرار: يومي\n• المدة: 5 دقائق\n• وقت التذكير: 8:00 مساءً",
+    ),
+    "resetOriginalSettings": MessageLookupByLibrary.simpleMessage(
+      "إرجاع الإعدادات للحالة الأصلية",
+    ),
+    "resetSettings": MessageLookupByLibrary.simpleMessage("إرجاع الإعدادات"),
     "saveSettings": MessageLookupByLibrary.simpleMessage("حفظ الإعدادات"),
+    "saved": MessageLookupByLibrary.simpleMessage("السور المحفوظة"),
     "sessionDuration": MessageLookupByLibrary.simpleMessage("مدة القراءة:"),
     "setting": MessageLookupByLibrary.simpleMessage("الإعدادات"),
     "settingsSaved": MessageLookupByLibrary.simpleMessage(

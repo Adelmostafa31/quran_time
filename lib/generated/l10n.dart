@@ -184,6 +184,21 @@ class S {
     );
   }
 
+  /// `minutes a day with the Holy Quran`
+  String get readyForYour2 {
+    return Intl.message(
+      'minutes a day with the Holy Quran',
+      name: 'readyForYour2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Just`
+  String get just {
+    return Intl.message('Just', name: 'just', desc: '', args: []);
+  }
+
   /// `next minutes?`
   String get nextMinutes {
     return Intl.message(
@@ -297,6 +312,51 @@ class S {
   /// `Next Surah`
   String get nextSurah {
     return Intl.message('Next Surah', name: 'nextSurah', desc: '', args: []);
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
+  }
+
+  /// `Are you sure you want to reset all settings to their original state?\n\nThe following will be restored:\n• Repeat: Daily\n• Duration: 5 minutes\n• Reminder time: 8:00 PM`
+  String get resetOriginal {
+    return Intl.message(
+      'Are you sure you want to reset all settings to their original state?\n\nThe following will be restored:\n• Repeat: Daily\n• Duration: 5 minutes\n• Reminder time: 8:00 PM',
+      name: 'resetOriginal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset Settings`
+  String get resetSettings {
+    return Intl.message(
+      'Reset Settings',
+      name: 'resetSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset Settings to Original State`
+  String get resetOriginalSettings {
+    return Intl.message(
+      'Reset Settings to Original State',
+      name: 'resetOriginalSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Favorites`
+  String get favorites {
+    return Intl.message('Favorites', name: 'favorites', desc: '', args: []);
+  }
+
+  /// `Saved`
+  String get saved {
+    return Intl.message('Saved', name: 'saved', desc: '', args: []);
   }
 }
 

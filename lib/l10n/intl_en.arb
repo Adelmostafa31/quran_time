@@ -15,6 +15,8 @@
   "times": "Times",
   "startReading": "Start Reading",
   "readyForYour": "Ready for your",
+  "readyForYour2": "minutes a day with the Holy Quran",
+  "just": "Just",
   "nextMinutes": "next minutes?",
   "nextReminder": "Next reminder",
   "setting": "Settings",
@@ -31,5 +33,11 @@
   "extend": "Extend +5min",
   "finish": "Finish",
   "completedSurahs": "Completed Surahs",
-  "nextSurah": "Next Surah"
+  "nextSurah": "Next Surah",
+  "cancel": "Cancel",
+  "resetOriginal": "Are you sure you want to reset all settings to their original state?\n\nThe following will be restored:\n• Repeat: Daily\n• Duration: 5 minutes\n• Reminder time: 8:00 PM",
+  "resetSettings": "Reset Settings",
+  "resetOriginalSettings": "Reset Settings to Original State",
+  "favorites": "Favorites",
+  "saved": "Saved"
 }

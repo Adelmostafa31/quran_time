@@ -22,12 +22,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "changeLanguage": MessageLookupByLibrary.simpleMessage("Change Language"),
     "completedSurahs": MessageLookupByLibrary.simpleMessage("Completed Surahs"),
     "daily": MessageLookupByLibrary.simpleMessage("Daily"),
     "extend": MessageLookupByLibrary.simpleMessage("Extend +5min"),
+    "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
     "finish": MessageLookupByLibrary.simpleMessage("Finish"),
     "from": MessageLookupByLibrary.simpleMessage("of"),
+    "just": MessageLookupByLibrary.simpleMessage("Just"),
     "minutes": MessageLookupByLibrary.simpleMessage("min"),
     "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
     "nextMinutes": MessageLookupByLibrary.simpleMessage("next minutes?"),
@@ -46,10 +49,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "Reading Frequency:",
     ),
     "readyForYour": MessageLookupByLibrary.simpleMessage("Ready for your"),
+    "readyForYour2": MessageLookupByLibrary.simpleMessage(
+      "minutes a day with the Holy Quran",
+    ),
     "remindMeAt": MessageLookupByLibrary.simpleMessage("Remind me at"),
     "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time:"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+    "resetOriginal": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to reset all settings to their original state?\n\nThe following will be restored:\n• Repeat: Daily\n• Duration: 5 minutes\n• Reminder time: 8:00 PM",
+    ),
+    "resetOriginalSettings": MessageLookupByLibrary.simpleMessage(
+      "Reset Settings to Original State",
+    ),
+    "resetSettings": MessageLookupByLibrary.simpleMessage("Reset Settings"),
     "saveSettings": MessageLookupByLibrary.simpleMessage("Save Settings"),
+    "saved": MessageLookupByLibrary.simpleMessage("Saved"),
     "sessionDuration": MessageLookupByLibrary.simpleMessage(
       "Session Duration:",
     ),
