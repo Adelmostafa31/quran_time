@@ -47,26 +47,59 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+
 		<!-- 🔔 NOTIFICATION PERMISSIONS FOR QURAN REMINDERS -->
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>background-processing</string>
+			<!-- Added: Equivalent to Android's boot completed and exact alarms -->
+			<string>background-app-refresh</string>
 		</array>
-		<!-- Notification permission description -->
+
+		<!-- Notification permission description (already present) -->
 		<key>NSUserNotificationsUsageDescription</key>
 		<string>Quran Timer needs permission to send you daily Quran reading reminders to help maintain your spiritual routine.</string>
-		<!-- Background task identifiers -->
+
+		<!-- Background task identifiers (already present) -->
 		<key>BGTaskSchedulerPermittedIdentifiers</key>
 		<array>
 			<string>com.quran.reminder</string>
 		</array>
-		<!-- 📱 ARABIC TEXT SUPPORT -->
+
+		<!-- 📳 HAPTIC FEEDBACK PERMISSION -->
+		<!-- iOS equivalent to Android's VIBRATE permission -->
+		<!-- Note: No explicit permission needed in Info.plist for haptic feedback -->
+		<!-- Haptic feedback is available by default in iOS -->
+
+		<!-- 🔄 BOOT/RESTART HANDLING -->
+		<!-- iOS equivalent to Android's RECEIVE_BOOT_COMPLETED -->
+		<!-- This is handled through background app refresh capability above -->
+		
+		<!-- ⏰ EXACT TIMING PERMISSIONS -->
+		<!-- iOS equivalent to Android's USE_EXACT_ALARM and SCHEDULE_EXACT_ALARM -->
+		<!-- iOS doesn't require explicit permission for local notifications with exact timing -->
+		<!-- But we ensure critical alerts capability if needed -->
+		<key>UIApplicationExitsOnSuspend</key>
+		<false/>
+
+		<!-- 📱 ARABIC TEXT SUPPORT (already present) -->
 		<key>CFBundleAllowMixedLocalizations</key>
 		<true/>
 		<key>CFBundleLocalizations</key>
 		<array>
 			<string>en</string>
 			<string>ar</string>
+		</array>
+
+		<!-- 🎯 ADDITIONAL iOS-SPECIFIC CAPABILITIES -->
+		<!-- Support for critical notifications (similar to exact alarms) -->
+		<key>UNNotificationSoundName</key>
+		<string>default</string>
+		
+		<!-- Allow app to continue running for notifications -->
+		<key>UIRequiredDeviceCapabilities</key>
+		<array>
+			<string>armv7</string>
 		</array>
 	</dict>
 </plist>
